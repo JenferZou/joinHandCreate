@@ -23,7 +23,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/student")
 @Api(tags = "学生模块")
-@PreAuthorize("hasRole('ROLE_STUDENT')")
+//@PreAuthorize("hasRole('ROLE_STUDENT')")
 public class StudentController {
 
 

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/teacher")
 @Api(tags = "教师模块")
-@PreAuthorize("hasRole('ROLE_TEACHER')")
+//@PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherController {
     @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
