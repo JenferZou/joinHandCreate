@@ -17,6 +17,8 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     SYSTEM_ERROR("10000","出错啦，后台小哥正在努力修复中..."),
     // 参数错误状态码
     PARAM_NOT_VALID("10001", "参数错误"),
+    UNAUTHORIZED("20001", "无访问权限，请先登录！"),
+    FORBIDDEN("20002", "权限不足！"),
     ;
 
     // 异常码
