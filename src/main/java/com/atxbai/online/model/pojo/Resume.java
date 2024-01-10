@@ -6,10 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
+@TableName("resume")
 @Data
 @AllArgsConstructor
-@TableName("resume")
 public class Resume {
 
     @TableId("resumeId")

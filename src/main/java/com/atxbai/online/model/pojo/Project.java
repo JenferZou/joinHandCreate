@@ -8,10 +8,9 @@ import lombok.Data;
 
 import java.util.Date;
 
-
+@TableName("project")
 @Data
 @AllArgsConstructor
-@TableName("project")
 public class Project {
 
     @TableId("id")
