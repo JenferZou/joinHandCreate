@@ -8,9 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@TableName("deliever_resume")
+
 @Data
 @NoArgsConstructor
+@TableName("deliever_resume")
 public class DelieverResume {
 
     @TableId("id")

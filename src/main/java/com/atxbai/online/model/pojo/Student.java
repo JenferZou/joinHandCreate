@@ -15,9 +15,6 @@ public class Student {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @TableField("rid")
-    private Integer rid;
-
     @TableField("sno")
     private String sno;
 

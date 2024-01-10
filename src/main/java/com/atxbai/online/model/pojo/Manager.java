@@ -13,12 +13,8 @@ public class Manager {
     @TableId("no")
     private String no;
 
-
     @TableField("name")
     private String name;
-
-    @TableField("rid")
-    private Integer rid;
 
     @TableField("major")
     private String major;

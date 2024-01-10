@@ -29,9 +29,4 @@ public class Teacher {
     @TableField("password")
     private String password;
 
-    @TableField("rid")
-    private Integer rid;
-
-
-
 }
