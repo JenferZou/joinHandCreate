@@ -18,6 +18,7 @@ import java.io.IOException;
 /**
  * @author 小白
  * @version 1.0
+ * @content 用于登录后权限不够
  */
 @Slf4j
 @Component
@@ -26,7 +27,6 @@ public class RestAccessDeniedHandler  implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.warn("登录成功访问收保护的资源，但是权限不够: ", accessDeniedException.getCause());
-
         ResultUtil.fail(response, Response.fail(ResponseCodeEnum.FORBIDDEN));
     }
 }

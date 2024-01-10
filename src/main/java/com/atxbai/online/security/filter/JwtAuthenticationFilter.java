@@ -1,8 +1,10 @@
 package com.atxbai.online.security.filter;
 
-import com.atxbai.weblog.jwt.exception.UsernameOrPasswordNullException;
+
+import com.atxbai.online.exception.UsernameOrPasswordNullException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,18 +20,15 @@ import java.util.Objects;
 /**
  * @author 小白
  * @version 1.0
- * @create: 2023-12-28 14:29
- * @content: 这个过滤器是用于认证，简单来说，就是登录认证
- * 重新 spring security 第一层的拦截器
- * 在这个阶段，只有 username 和 password
+ * @content: 用于认证
  */
+@Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     /**
      * 在构造器中，指定用户登录的访问地址，重新父类的方法
      */
     public JwtAuthenticationFilter(){
-        // 通过 AntPathRequestMatcher 指定了处理用户登录的访问地址
         // 当请求路径匹配 /login 并且请求方法为 POST 时，该过滤器将被触发
         super(new AntPathRequestMatcher("/login","POST"));
     }
@@ -55,14 +54,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         }
 
         // 读取数据
-        // region 区别 textValue 和 asText
-
-        // textValue 只针对 String 类型，如果不为 String 为null
-        // asText 如果不是 String 类型，强转为 String
-        // endregion
         String username = usernameNode.textValue();
         String password = passwordNode.textValue();
 
+        log.info("传入的username:{},password:{}",username,password);
         // 将用户名、密码封装到 Authentication 中
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                 = new UsernamePasswordAuthenticationToken(username, password);

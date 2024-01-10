@@ -17,9 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * @author 小白
  * @version 1.0
- * create: 2023-12-28 09:09
- * content: spring Security 配置
- * 只有后台才需要认证
  */
 
 @Configuration
@@ -38,11 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 登录成功访问收保护的资源，但是权限不够
     private RestAccessDeniedHandler deniedHandler;
 
-    /**
-     * HTTP Basic 认证是 Spring Security 中的一种认证方式，它基于 HTTP 基本认证协议。
-     * 这种认证方式是一种简单的认证方式，适用于简单的应用场景。当客户端发送请求时，会将用户名
-     * 和密码使用 Base64 编码的形式放在请求头中，服务器接收到请求后会解码并验证这些信息。
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -54,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 // 配置需要认证的路径
                 .authorizeHttpRequests()
-                .mvcMatchers("/admin/**").authenticated()
+                .mvcMatchers("/admin/**","/student/**","/teacher/**").authenticated()
                 .anyRequest().permitAll()
             .and()
                 // 前后端分离，无需创建会话
@@ -67,8 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(deniedHandler)
             .and()
                 // 将 Token 校验过滤器添加到用户认证过滤器之前
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        ;
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     /**

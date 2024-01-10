@@ -19,8 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * @author 小白
  * @version 1.0
- * @create: 2023-12-28 18:24
- * @content:
+ * @content: 用于认证生成 JWT 的流程
  */
 @Configuration
 @EnableWebSecurity
@@ -61,14 +60,12 @@ public class JwtAuthenticationSecurityConfig extends SecurityConfigurerAdapter<D
         filter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
 
         // 3. 直接使用 DaoAuthenticationProvider, 它是 Spring Security 提供的默认的身份验证提供者之一
-        // 这个类要调用我们的 userDetailService 的实现类, 我们将我们写的设置进去
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         // 设置 userDetailService，用于获取用户的详细信息
         provider.setUserDetailsService(userDetailsService);
 
         // 4.设置加密算法
         provider.setPasswordEncoder(passwordEncoder);
-        // 将我们创建的 provider，添加到 httpSecurity 上
         builder.authenticationProvider(provider);
 
         // 5.将我们创建的拦截器添加到 UsernamePasswordAuthenticationFilter 之前执行

@@ -19,18 +19,13 @@ import java.io.IOException;
 /**
  * @author 小白
  * @version 1.0
- * @create: 2023-12-29 16:06
- * @content: 自定义我们认证异常处理对象
- * 处理用户未登录访问受保护的资源。AuthenticationEntryPoint是Spring Security框架中的一个接口，
- * 用于定义认证失败时如何处理。当用户尝试访问受保护的资源，但未提供正确的认证信息时，
- * Spring Security会调用 AuthenticationEntryPoint 接口的实现类来处理认证失败的情况。
+ * @content： 鉴权错误的处理
  */
 @Slf4j
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     // AuthenticationEntryPoint接口只定义了一个方法commence，用于处理认证失败的情况。
-    // 在该方法中，实现类可以根据需要执行不同的操作，例如重定向用户到登录页面、返回401错误页面等
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         // 提示

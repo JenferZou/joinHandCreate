@@ -1,6 +1,7 @@
 package com.atxbai.online.mapper;
 
-import com.atxbai.online.model.DO.StudentDO;
+import com.atxbai.online.model.pojo.Student;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,6 +12,16 @@ import org.apache.ibatis.annotations.Mapper;
  * @content:
  */
 @Mapper
-public interface StudentMapper extends BaseMapper<StudentDO> {
+public interface StudentMapper extends BaseMapper<Student> {
+
+    /**
+     * 这个方法用于效验权限
+     * @return
+     */
+    default Student findByUsername(String username){
+        LambdaQueryWrapper<Student> wrapper = new LambdaQueryWrapper<>();
+        // 判断 username 和 sno 是否相同
+        return selectOne(wrapper.eq(Student::getSno,username));
+    }
 
 }

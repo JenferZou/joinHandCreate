@@ -20,8 +20,7 @@ import java.io.IOException;
 /**
  * @author 小白
  * @version 1.0
- * @create: 2023-12-28 16:08
- * @content: 自定义认证成功处理器
+ * @content: 认证成功处理器
  */
 @Slf4j
 @Component
@@ -34,7 +33,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
     private JwtTokenHelper jwtTokenHelper;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // 从 authentication 对象中获取用户的 UserDetails 实例，这里是获取用户的用户名
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -46,7 +45,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         // 返回 token
         LoginRspVO loginRspVO = LoginRspVO.builder().token(token).build();
 
-        // 通过工具类返回对象
+        // TODO 通过工具类返回对象
         ResultUtil.ok(response, Response.success(loginRspVO));
     }
 }

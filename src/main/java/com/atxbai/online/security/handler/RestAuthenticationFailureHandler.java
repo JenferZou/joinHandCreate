@@ -1,9 +1,10 @@
 package com.atxbai.online.security.handler;
 
-import com.atxbai.weblog.common.enums.ResponseCodeEnum;
-import com.atxbai.weblog.common.utils.Response;
-import com.atxbai.weblog.jwt.exception.UsernameOrPasswordNullException;
-import com.atxbai.weblog.jwt.utils.ResultUtil;
+
+import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
+import com.atxbai.online.common.securityUtils.ResultUtil;
+import com.atxbai.online.exception.UsernameOrPasswordNullException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,14 +19,13 @@ import java.io.IOException;
 /**
  * @author 小白
  * @version 1.0
- * create: 2023-12-28 18:13
- * content: 自定义认证失败处理器，当失败时 IOC 容器调用
+ * @content: 用于认证失败后处理的
  */
 @Slf4j
 @Component
 public class RestAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException{
         // 提示错误
         log.warn("AuthenticationException: ", exception.getMessage());
         // 判断异常

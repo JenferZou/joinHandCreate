@@ -1,7 +1,7 @@
 package com.atxbai.online.service.impl;
 
-import com.atxbai.online.model.DO.StudentDO;
 import com.atxbai.online.mapper.StudentMapper;
+import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.service.StudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @content: 学生实现类
  */
 @Service
-public class StudentServiceImpl extends ServiceImpl<StudentMapper, StudentDO> implements StudentService {
+public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
 
 }

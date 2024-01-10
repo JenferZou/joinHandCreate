@@ -18,4 +18,5 @@ public class LoginRspVO {
      * token 值
      */
     private String token;
+
 }
