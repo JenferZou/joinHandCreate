@@ -1,6 +1,7 @@
 package com.atxbai.online.service;
 
 
+import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -11,4 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @content:
  */
 public interface StudentService extends IService<Student> {
+    void add(Resume resume);
+
+    void updateResume(Resume resume);
 }

@@ -1,5 +1,6 @@
 package com.atxbai.online.mapper;
 
+import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -24,4 +25,7 @@ public interface StudentMapper extends BaseMapper<Student> {
         return selectOne(wrapper.eq(Student::getSno,username));
     }
 
+    int add(Resume resume);
+
+    int updateResume(Resume resume);
 }

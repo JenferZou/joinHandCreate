@@ -14,10 +14,10 @@ import java.util.Date;
 public class Project {
 
     @TableId("id")
-    private String id;
+    private Integer id;
 
     @TableField("tno")
-    private String tno;
+    private Integer tno;
 
     @TableField("mentor")
     private String mentor;

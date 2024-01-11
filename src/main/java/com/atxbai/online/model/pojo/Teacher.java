@@ -12,7 +12,7 @@ import lombok.Data;
 public class Teacher {
 
     @TableId("no")
-    private String no;
+    private Integer no;
 
     @TableField("name")
     private String name;

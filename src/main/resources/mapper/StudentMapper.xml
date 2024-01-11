@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atxbai.online.mapper.StudentMapper">
+    <sql id="Base_Column_List">
+        resumeId,sno,personalAdvantage,internshipExperience,awardExperience,projectExperience,certificate
+    </sql>
+
+    <insert id="add" parameterType="com.atxbai.online.model.pojo.Resume" useGeneratedKeys="true">
+        insert into resume
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">resumeId,</if>
+            <if test="sno != null">sno,</if>
+            <if test="personalAdvantage != null">personalAdvantage,</if>
+            <if test="internshipExperience != null">internshipExperience,</if>
+            <if test="awardExperience != null">awardExperience,</if>
+            <if test="projectExperience != null">projectExperience,</if>
+            <if test="certificate != null">certificate,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">#{resumeId},</if>
+            <if test="sno != null">#{sno},</if>
+            <if test="personalAdvantage != null">#{personalAdvantage},</if>
+            <if test="internshipExperience != null">#{internshipExperience},</if>
+            <if test="awardExperience != null">#{awardExperience},</if>
+            <if test="projectExperience != null">#{projectExperience},</if>
+            <if test="certificate != null">#{certificate},</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateResume" parameterType="com.atxbai.online.model.pojo.Resume">
+        update resume
+        <set>
+            <if test="personalAdvantage != null">
+                personalAdvantage = #{personalAdvantage},
+            </if>
+            <if test="internshipExperience != null">
+                internshipExperience = #{internshipExperience},
+            </if>
+            <if test="awardExperience != null">
+                awardExperience = #{awardExperience},
+            </if>
+            <if test="projectExperience != null">
+                projectExperience = #{projectExperience},
+            </if>
+            <if test="certificate != null">
+                certificate = #{certificate},
+            </if>
+        </set>
+        where resumeId = #{resumeId}
+    </update>
+</mapper>

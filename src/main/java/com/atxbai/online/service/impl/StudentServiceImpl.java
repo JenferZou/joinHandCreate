@@ -1,10 +1,13 @@
 package com.atxbai.online.service.impl;
 
 import com.atxbai.online.mapper.StudentMapper;
+import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.service.StudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * @author 小白
@@ -14,4 +17,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
+
+    @Resource
+    private StudentMapper studentMapper;
+    @Override
+    public void add(Resume resume) {
+        studentMapper.add(resume);
+    }
+
+    @Override
+    public void updateResume(Resume resume) {
+        studentMapper.updateResume(resume);
+    }
 }
