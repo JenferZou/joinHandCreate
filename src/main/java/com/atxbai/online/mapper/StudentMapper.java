@@ -28,4 +28,10 @@ public interface StudentMapper extends BaseMapper<Student> {
     int add(Resume resume);
 
     int updateResume(Resume resume);
+    /**
+     * 更新学生信息
+     * @param student 更新学生实体
+     * @return
+     */
+    int updateStudent(Student student);
 }

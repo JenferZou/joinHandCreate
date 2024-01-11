@@ -51,7 +51,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         }
 
         // 返回 token
-        com.atxbai.online.model.VO.login.LoginRspVO loginRspVO = com.atxbai.online.model.VO.login.LoginRspVO.builder().token(token).title(title).build();
+        com.atxbai.online.model.vo.login.LoginRspVO loginRspVO = com.atxbai.online.model.vo.login.LoginRspVO.builder().token(token).title(title).build();
 
         // TODO 通过工具类返回对象
         ResultUtil.ok(response, Response.success(loginRspVO));

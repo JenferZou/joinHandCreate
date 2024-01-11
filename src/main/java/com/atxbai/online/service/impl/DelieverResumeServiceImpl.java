@@ -9,5 +9,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class DelieverResumeServiceImpl extends ServiceImpl<DelieverResumeMapper, DelieverResume> implements DelieverResumeService {
 
-
 }

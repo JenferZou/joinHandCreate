@@ -140,6 +140,6 @@ public class JwtTokenHelper implements InitializingBean {
     public static void main(String[] args) {
         String key = generateBase64Key();
         System.out.println("key: " + key);
-    }
+   }
 
 }
