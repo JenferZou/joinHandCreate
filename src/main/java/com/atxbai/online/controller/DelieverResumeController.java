@@ -23,8 +23,9 @@ public class DelieverResumeController {
     private DelieverResumeService delieverResumeService;
 
     @ApiOperation(value = "根据pid获取投递的简历")
-    @GetMapping("/getdelieverResumeByPid/{pid}/{pageNo}/{pageSize}")
-    public PageResponse<DelieverResume> getdelieverResumeByPid(@PathVariable("pid") Integer pid,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    @GetMapping("/getdelieverResumeByPid")
+    //{pid}/{pageNo}/{pageSize}
+    public PageResponse<DelieverResume> getdelieverResumeByPid(@RequestParam("pid") Integer pid,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getPid, pid);
@@ -34,8 +35,9 @@ public class DelieverResumeController {
 
     }
     @ApiOperation(value = "根据tno获取投递的简历")
-    @GetMapping("/getdelieverResumeBytno/{tno}/{pageNo}/{pageSize}")
-    public PageResponse<DelieverResume> getdelieverResumeBytno(@PathVariable("tno") Integer tno,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    @GetMapping("/getdelieverResumeBytno")
+    ///{tno}/{pageNo}/{pageSize}
+    public PageResponse<DelieverResume> getdelieverResumeBytno(@RequestParam("tno") Integer tno,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getTno,tno);
@@ -57,8 +59,9 @@ public class DelieverResumeController {
     }
 
     @ApiOperation(value = "根据sno获取投递的简历")
-    @GetMapping("/getdelieverResumeBysno/{sno}/{pageNo}/{pageSize}")
-    public PageResponse<DelieverResume> getdelieverResumeBysno(@PathVariable("sno") String sno,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    @GetMapping("/getdelieverResumeBysno")
+    ///{sno}/{pageNo}/{pageSize}
+    public PageResponse<DelieverResume> getdelieverResumeBysno(@RequestParam("sno") String sno,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno);
@@ -69,8 +72,8 @@ public class DelieverResumeController {
 
 
     @ApiOperation(value = "根据id删除投递的简历")
-    @GetMapping("/deleteDelieverResumeById/{id}")
-    public Response deleteDelieverResumeById(@PathVariable("id") Integer id){
+    @GetMapping("/deleteDelieverResumeById")
+    public Response deleteDelieverResumeById(@RequestParam("id") Integer id){
         boolean remove = delieverResumeService.removeById(id);
         if(remove){
             return Response.success();

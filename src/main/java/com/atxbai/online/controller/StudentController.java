@@ -1,7 +1,7 @@
 package com.atxbai.online.controller;
 
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.VO.TestSaveReqVO;
+import com.atxbai.online.model.vo.TestSaveReqVO;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.service.StudentService;
 import io.swagger.annotations.Api;

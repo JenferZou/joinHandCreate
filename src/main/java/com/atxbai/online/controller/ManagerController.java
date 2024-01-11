@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManagerController {
     @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
-    public Response test(@RequestBody @Validated com.atxbai.online.model.VO.TestSaveReqVO testSaveReqVO){
+    public Response test(@RequestBody @Validated com.atxbai.online.model.vo.TestSaveReqVO testSaveReqVO){
         return Response.success(testSaveReqVO);
     }
 }

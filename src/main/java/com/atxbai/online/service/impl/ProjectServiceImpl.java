@@ -2,7 +2,7 @@ package com.atxbai.online.service.impl;
 
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.ProjectMapper;
-import com.atxbai.online.model.VO.ProjectReqVo;
+import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

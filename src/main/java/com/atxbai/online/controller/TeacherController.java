@@ -2,8 +2,8 @@ package com.atxbai.online.controller;
 
 import com.atxbai.online.common.responseUtils.Response;
 
-import com.atxbai.online.model.VO.ProjectReqVo;
-import com.atxbai.online.model.VO.TestSaveReqVO;
+import com.atxbai.online.model.vo.ProjectReqVo;
+import com.atxbai.online.model.vo.TestSaveReqVO;
 import com.atxbai.online.service.ProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

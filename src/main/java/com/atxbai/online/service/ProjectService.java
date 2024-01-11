@@ -1,6 +1,6 @@
 package com.atxbai.online.service;
 
-import com.atxbai.online.model.VO.ProjectReqVo;
+import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.baomidou.mybatisplus.extension.service.IService;
 

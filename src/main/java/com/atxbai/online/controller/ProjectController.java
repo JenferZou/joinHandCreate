@@ -4,7 +4,7 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.exception.BizException;
-import com.atxbai.online.model.VO.ProjectReqVo;
+import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -34,8 +34,8 @@ public class ProjectController {
      * @return
      */
     @ApiOperation(value = "获取所有项目")
-    @GetMapping ("/getProject/{pageNo}/{pageSize}")
-    public PageResponse<Project> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    @GetMapping ("/getProject")
+    public PageResponse<Project> getProject(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
 
         Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -53,8 +53,8 @@ public class ProjectController {
      * @return
      */
     @ApiOperation(value = "根据项目id获取项目详情")
-    @GetMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
-    public PageResponse<Project> getProjectById(@PathVariable("id") Integer id, @PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    @GetMapping("/getProjectById")
+    public PageResponse<Project> getProjectById(@RequestParam("id") Integer id, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         if(id == null){
             throw new BizException(ResponseCodeEnum.CODE_600);
         }

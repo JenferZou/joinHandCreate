@@ -1,4 +1,4 @@
-package com.atxbai.online.model.VO;
+package com.atxbai.online.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
