@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class ProjectController {
      * @return
      */
     @ApiOperation(value = "获取所有项目")
-    @RequestMapping("/getProject/{pageNo}/{pageSize}")
+    @GetMapping ("/getProject/{pageNo}/{pageSize}")
     public PageResponse<ProjectVo> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
 
         Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
@@ -56,7 +57,7 @@ public class ProjectController {
      */
     @ApiOperation(value = "根据项目id获取项目详情")
 
-    @RequestMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
+    @GetMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
     public PageResponse<Project> getProjectById(@PathVariable("id") Integer id, @PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         if(id == null){
             throw new BizException(ResponseCodeEnum.CODE_600);
