@@ -17,7 +17,7 @@ public class DelieverResume {
     private Integer id;
 
     @TableField("pid")
-    private String pid;
+    private Integer pid;
 
 
     @TableField("sno")
@@ -27,7 +27,7 @@ public class DelieverResume {
     private String sName;
 
     @TableField("tno")
-    private String tno;
+    private Integer tno;
 
 
     @TableField("mentor")
