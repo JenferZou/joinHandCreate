@@ -13,7 +13,7 @@ import lombok.Data;
 public class Teacher {
 
     @TableId(value = "no",type = IdType.AUTO)
-    private Long no;
+    private Integer no;
 
     @TableField("name")
     private String name;

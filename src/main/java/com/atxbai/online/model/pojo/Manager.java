@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Manager {
     @TableId(value = "no",type = IdType.AUTO)
-    private Long no;
+    private Integer no;
 
     @TableField("name")
     private String name;

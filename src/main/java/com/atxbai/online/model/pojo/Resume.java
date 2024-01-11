@@ -1,5 +1,6 @@
 package com.atxbai.online.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,8 +12,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Resume {
 
-    @TableId("resumeId")
-    private String resumeId;
+    @TableId(value = "resumeId",type = IdType.AUTO)
+    private Integer resumeId;
 
     @TableField("sno")
     private String sno;
