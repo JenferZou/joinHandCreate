@@ -19,4 +19,8 @@ public class LoginRspVO {
      */
     private String token;
 
+    /**
+     * 判断是否是管理员
+     */
+    private String title;
 }

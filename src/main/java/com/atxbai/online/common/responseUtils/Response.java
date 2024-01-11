@@ -33,6 +33,7 @@ public class Response<T> implements Serializable {
      */
     public static <T> Response<T> success() {
         Response<T> response = new Response<>();
+        response.setErrorCode("200");
         return response;
     }
 
@@ -41,6 +42,7 @@ public class Response<T> implements Serializable {
      */
     public static <T> Response<T> success(T data) {
         Response<T> response = new Response<>();
+        response.setErrorCode("200");
         response.setData(data);
         return response;
     }

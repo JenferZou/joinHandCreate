@@ -6,6 +6,7 @@ import com.atxbai.online.model.VO.login.LoginRspVO;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.securityUtils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,9 +42,19 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         String username = userDetails.getUsername();
         // 用我们 JWT 工具类，创建我们的 Token
         String token = jwtTokenHelper.generateToken(username);
+        // 返回的 title
+        String title = null;
+        // 利用用户名 设置title
+        if (username.startsWith("1000")){
+            title = "学生";
+        } else if (username.startsWith("2000")) {
+            title = "教师";
+        }else{
+            title = "管理员";
+        }
 
         // 返回 token
-        LoginRspVO loginRspVO = LoginRspVO.builder().token(token).build();
+        LoginRspVO loginRspVO = LoginRspVO.builder().token(token).title(title).build();
 
         // TODO 通过工具类返回对象
         ResultUtil.ok(response, Response.success(loginRspVO));
