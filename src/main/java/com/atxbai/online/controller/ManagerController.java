@@ -1,7 +1,6 @@
 package com.atxbai.online.controller;
 
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.vo.TestSaveReqVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManagerController {
     @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
-    public Response test(@RequestBody @Validated TestSaveReqVO testSaveReqVO){
+    public Response test(@RequestBody @Validated com.atxbai.online.model.VO.TestSaveReqVO testSaveReqVO){
         return Response.success(testSaveReqVO);
     }
 }

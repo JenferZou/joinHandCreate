@@ -2,7 +2,6 @@ package com.atxbai.online.security.handler;
 
 
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.vo.login.LoginRspVO;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.securityUtils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         }
 
         // 返回 token
-        LoginRspVO loginRspVO = LoginRspVO.builder().token(token).title(title).build();
+        com.atxbai.online.model.VO.login.LoginRspVO loginRspVO = com.atxbai.online.model.VO.login.LoginRspVO.builder().token(token).title(title).build();
 
         // TODO 通过工具类返回对象
         ResultUtil.ok(response, Response.success(loginRspVO));
