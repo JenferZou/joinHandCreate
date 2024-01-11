@@ -2,7 +2,7 @@ package com.atxbai.online.service.impl;
 
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.ProjectMapper;
-import com.atxbai.online.model.VO.ProjectVo;
+import com.atxbai.online.model.VO.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,12 +22,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Autowired
     JwtTokenHelper jwtTokenHelper;
 
+    /**
+     * 新增项目
+     * @param projectReqVo
+     */
     @Override
-    public void save(ProjectVo projectVo) {
+    public void save(ProjectReqVo projectReqVo) {
         Project project = new Project();
 
         //对象属性拷贝
-        BeanUtils.copyProperties(projectVo, project);
+        BeanUtils.copyProperties(projectReqVo, project);
 
         // 授权对象
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
