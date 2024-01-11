@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @TableName("project")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Project {
 
     @TableId(value = "id",type = IdType.AUTO)
@@ -27,7 +30,7 @@ public class Project {
     private String name;
 
     @TableField("startTime")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @TableField("content")
     private String content;

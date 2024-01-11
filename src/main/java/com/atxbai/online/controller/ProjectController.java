@@ -2,10 +2,11 @@ package com.atxbai.online.controller;
 
 import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.PageResponse;
+import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.exception.BizException;
+import com.atxbai.online.model.VO.ProjectVo;
 import com.atxbai.online.model.pojo.Project;
-import com.atxbai.online.model.vo.ProjectVo;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,14 +16,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/teacher")
 @Api(tags = "项目模块")
 public class ProjectController {
 
@@ -69,6 +69,12 @@ public class ProjectController {
         return PageResponse.success(page,page.getRecords());
     }
 
+    @PostMapping("/saveProject")
+    @ApiOperation("新增项目")
+    public Response save(@RequestBody @Validated ProjectVo projectVo){
+        projectService.save(projectVo);
+        return Response.success("发布成功");
+    }
 
 
 
