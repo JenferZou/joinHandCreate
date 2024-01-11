@@ -10,6 +10,8 @@ import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/project")
+@Api(tags = "项目模块")
 public class ProjectController {
 
     @Resource
@@ -32,6 +35,7 @@ public class ProjectController {
      * @param pageSize
      * @return
      */
+    @ApiOperation(value = "获取所有项目")
     @RequestMapping("/getProject/{pageNo}/{pageSize}")
     public PageResponse<ProjectVo> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
 
@@ -50,6 +54,8 @@ public class ProjectController {
      * @param pageSize
      * @return
      */
+    @ApiOperation(value = "根据项目id获取项目详情")
+
     @RequestMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
     public PageResponse<Project> getProjectById(@PathVariable("id") Integer id, @PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         if(id == null){
