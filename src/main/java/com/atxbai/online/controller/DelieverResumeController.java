@@ -23,7 +23,7 @@ public class DelieverResumeController {
     private DelieverResumeService delieverResumeService;
 
     @ApiOperation(value = "根据pid获取投递的简历")
-    @GetMapping("/getdelieverResumeByPid/{pid}/{pageNo}/{page}")
+    @GetMapping("/getdelieverResumeByPid/{pid}/{pageNo}/{pageSize}")
     public PageResponse<DelieverResume> getdelieverResumeByPid(@PathVariable("pid") Integer pid,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -34,14 +34,13 @@ public class DelieverResumeController {
 
     }
     @ApiOperation(value = "根据tno获取投递的简历")
-    @GetMapping("/getdelieverResumeBytno/{tno}/{pageNo}/{page}")
+    @GetMapping("/getdelieverResumeBytno/{tno}/{pageNo}/{pageSize}")
     public PageResponse<DelieverResume> getdelieverResumeBytno(@PathVariable("tno") Integer tno,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getTno,tno);
         IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
         return PageResponse.success(page, page.getRecords());
-
     }
 
     @ApiOperation(value = "投递简历")
@@ -58,7 +57,7 @@ public class DelieverResumeController {
     }
 
     @ApiOperation(value = "根据sno获取投递的简历")
-    @GetMapping("/getdelieverResumeBysno/{sno}/{pageNo}/{page}")
+    @GetMapping("/getdelieverResumeBysno/{sno}/{pageNo}/{pageSize}")
     public PageResponse<DelieverResume> getdelieverResumeBysno(@PathVariable("sno") String sno,@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();

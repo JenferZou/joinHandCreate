@@ -38,13 +38,13 @@ public class ProjectController {
      */
     @ApiOperation(value = "获取所有项目")
     @GetMapping ("/getProject/{pageNo}/{pageSize}")
-    public PageResponse<ProjectVo> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+    public PageResponse<Project> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
 
         Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
         projectLambdaQueryWrapper.orderByDesc(Project::getId);
         IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
-        return PageResponse.success(page, CopyTools.copyList(page.getRecords(), ProjectVo.class));
+        return PageResponse.success(page, page.getRecords());
     }
 
 
