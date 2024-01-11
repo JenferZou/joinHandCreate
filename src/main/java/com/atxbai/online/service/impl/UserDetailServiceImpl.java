@@ -65,14 +65,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
                    .build();
         } else if (Objects.nonNull(teacher)) {
             // 返回教师
-            return User.withUsername(teacher.getNo())
+            return User.withUsername(teacher.getNo().toString())
                    .password(teacher.getPassword())
                     // 用户鉴权
                    .authorities("ROLE_TEACHER")
                    .build();
         }else {
             // 返回管理员
-            return User.withUsername(manager.getNo())
+            return User.withUsername(manager.getNo().toString())
                    .password(manager.getPassword())
                     // 用户鉴权
                    .authorities("ROLE_ADMIN")

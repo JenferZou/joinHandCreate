@@ -1,5 +1,6 @@
 package com.atxbai.online.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -10,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Manager {
-    @TableId("no")
-    private String no;
+    @TableId(value = "no",type = IdType.AUTO)
+    private Integer no;
 
     @TableField("name")
     private String name;
