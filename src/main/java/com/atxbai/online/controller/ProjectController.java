@@ -1,0 +1,72 @@
+package com.atxbai.online.controller;
+
+import com.atxbai.online.common.copyUtils.CopyTools;
+import com.atxbai.online.common.responseUtils.PageResponse;
+import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
+import com.atxbai.online.exception.BizException;
+import com.atxbai.online.model.pojo.Project;
+import com.atxbai.online.model.vo.ProjectVo;
+import com.atxbai.online.service.ProjectService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+
+@RestController
+@RequestMapping("/project")
+public class ProjectController {
+
+    @Resource
+    private ProjectService projectService;
+
+
+    /**
+     * 分页获取所有项目列表
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/getProject/{pageNo}/{pageSize}")
+    public PageResponse<ProjectVo> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+
+        Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
+        LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        projectLambdaQueryWrapper.orderByDesc(Project::getId);
+        IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
+        return PageResponse.success(page, CopyTools.copyList(page.getRecords(), ProjectVo.class));
+    }
+
+
+    /**
+     * 根据项目id获取项目详情
+     * @param id
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
+    public PageResponse<Project> getProjectById(@PathVariable("id") Integer id, @PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
+        if(id == null){
+            throw new BizException(ResponseCodeEnum.CODE_600);
+        }
+        Page<Project> projectPage = new Page<>(pageNo == null? 1 : pageNo, pageSize == null? 10 : pageSize);
+        LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        projectLambdaQueryWrapper.eq(Project::getId, id);
+        IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
+        return PageResponse.success(page,page.getRecords());
+    }
+
+
+
+
+
+
+
+
+}

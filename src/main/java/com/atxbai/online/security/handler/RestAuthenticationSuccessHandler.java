@@ -2,18 +2,16 @@ package com.atxbai.online.security.handler;
 
 
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.VO.login.LoginRspVO;
+import com.atxbai.online.model.vo.login.LoginRspVO;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.securityUtils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

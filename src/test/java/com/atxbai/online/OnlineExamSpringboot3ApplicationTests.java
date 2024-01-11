@@ -23,8 +23,6 @@ class OnlineExamSpringboot3ApplicationTests {
     @Autowired
     private ManagerMapper managerMapper;
 
-
-
     @Test
     public void testConnection() {
         List<Student> students = studentMapper.selectList(null);

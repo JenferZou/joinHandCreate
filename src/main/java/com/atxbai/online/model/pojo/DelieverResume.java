@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @TableName("deliever_resume")
 public class DelieverResume {
 
-    @TableId("id")
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
     @TableField("pid")
