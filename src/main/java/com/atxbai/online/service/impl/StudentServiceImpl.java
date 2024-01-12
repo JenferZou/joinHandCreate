@@ -3,7 +3,7 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
-import com.atxbai.online.model.pojo.SearchDataVO;
+import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.service.StudentService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

@@ -3,8 +3,9 @@ package com.atxbai.online.controller;
 import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Student;
-import com.atxbai.online.model.pojo.SearchDataVO;
+import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
+import com.atxbai.online.service.ProjectService;
 import com.atxbai.online.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,8 @@ import java.util.Map;
 public class ManagerController {
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private ProjectService projectService;
 
 /*    @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
@@ -110,5 +113,17 @@ public class ManagerController {
     public Response modifyPassword(@RequestBody Map<String, String> data) {
 
         return null;
+    }
+    @GetMapping("/project/list")
+    @ApiOperation(value = "获取项目列表")
+    public Response projectList(int page,int limit,String keyword) {
+        if (page < 0 || limit < 0) {
+            return Response.fail("参数错误");
+        }
+        Response<Map<String, Object>> data = new Response<>();
+        Map<String, Object> d =projectService.listProject(page, limit, keyword);
+        data.setData(d);
+        data.setErrorCode("200");
+        return data;
     }
 }

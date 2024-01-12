@@ -3,7 +3,7 @@ package com.atxbai.online.service;
 
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
-import com.atxbai.online.model.pojo.SearchDataVO;
+import com.atxbai.online.model.vo.SearchDataVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;
