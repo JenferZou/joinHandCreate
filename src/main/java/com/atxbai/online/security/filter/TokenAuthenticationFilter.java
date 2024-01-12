@@ -111,7 +111,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities());
                     // 这个details属性用于存储额外的认证相关的细节信息，例如用户在进行认证时的IP地址、浏览器信息等。
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    // 将 authentication 存入 ThreadLocal，方便后续获取用户信息
+                    // 将 authentication 存入 ThreadLocal，方便后续获取用户信息,存放在线程中
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

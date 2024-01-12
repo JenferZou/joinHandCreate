@@ -1,12 +1,14 @@
 package com.atxbai.online.controller;
 
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.vo.TestSaveReqVO;
+import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +30,8 @@ public class StudentController {
     @Resource
     private StudentService studentService;
 
-    @PostMapping("/test/save")
-    @ApiOperation(value = "测试接口")
-    public Response test(@RequestBody @Validated TestSaveReqVO testSaveReqVO){
-        return Response.success(testSaveReqVO);
-    }
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
 
     @PostMapping("/add")
     @ApiOperation(value = "增加简历")

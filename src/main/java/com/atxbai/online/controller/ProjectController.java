@@ -1,10 +1,9 @@
 package com.atxbai.online.controller;
 
+import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.PageResponse;
-import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.exception.BizException;
-import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,9 +11,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -34,8 +36,8 @@ public class ProjectController {
      * @return
      */
     @ApiOperation(value = "获取所有项目")
-    @GetMapping ("/getProject")
-    public PageResponse<Project> getProject(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
+    @GetMapping ("/getProject/{pageNo}/{pageSize}")
+    public PageResponse<Project> getProject(@PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
 
         Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -53,8 +55,8 @@ public class ProjectController {
      * @return
      */
     @ApiOperation(value = "根据项目id获取项目详情")
-    @GetMapping("/getProjectById")
-    public PageResponse<Project> getProjectById(@RequestParam("id") Integer id, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
+    @GetMapping("/getProjectById/{id}/{pageNo}/{pageSize}")
+    public PageResponse<Project> getProjectById(@PathVariable("id") Integer id, @PathVariable("pageNo") Integer pageNo, @PathVariable("pageSize") Integer pageSize){
         if(id == null){
             throw new BizException(ResponseCodeEnum.CODE_600);
         }
@@ -64,13 +66,5 @@ public class ProjectController {
         IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
         return PageResponse.success(page,page.getRecords());
     }
-
-
-
-
-
-
-
-
 
 }

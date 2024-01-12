@@ -1,6 +1,7 @@
 package com.atxbai.online;
 
 
+import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.ManagerMapper;
 import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.mapper.TeacherMapper;
@@ -23,6 +24,9 @@ class OnlineExamSpringboot3ApplicationTests {
     @Autowired
     private ManagerMapper managerMapper;
 
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
     @Test
     public void testConnection() {
         List<Student> students = studentMapper.selectList(null);
@@ -39,5 +43,11 @@ class OnlineExamSpringboot3ApplicationTests {
         Student byUsername = studentMapper.findByUsername("100001");
         System.out.println(byUsername);
 
+    }
+
+    @Test
+    public void testToken(){
+        String usernameByToken = jwtTokenHelper.getUsernameByToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDAwMDEiLCJpc3MiOiJhdHhiYWkiLCJpYXQiOjE3MDQ5NTQxNTYsImV4cCI6MTcxMDEzODE1Nn0.iTz1370dc9g8mQR_Xj5-gWXMRgZM6dMkmVQ-qq003B8qbqx3iBN0uQevwEUEAqOnwfd7Tnx-9t5eJthP9f8DtA");
+        System.out.println(usernameByToken);
     }
 }
