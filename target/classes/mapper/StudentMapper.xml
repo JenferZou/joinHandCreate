@@ -51,4 +51,28 @@
         </set>
         where resumeId = #{resumeId}
     </update>
+    <update id="updateStudent" parameterType="com.atxbai.online.model.pojo.Student">
+        update student
+        <set>
+            <if test="gender!= null">
+                gender = #{gender},
+            </if>
+            <if test="sDepartment!= null">
+                sDepartment = #{sDepartment},
+            </if>
+            <if test="sMajor!= null">
+                sMajor = #{sMajor},
+            </if>
+            <if test="sPhone!= null">
+                sPhone = #{sPhone},
+            </if>
+            <if test="sName!= null">
+                sName = #{sName},
+            </if>
+            <if test="className!= null">
+                className = #{className},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

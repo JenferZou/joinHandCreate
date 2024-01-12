@@ -4,6 +4,7 @@ package com.atxbai.online.security.handler;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.securityUtils.ResultUtil;
+import com.atxbai.online.model.vo.login.LoginRspVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -51,7 +52,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         }
 
         // 返回 token
-        com.atxbai.online.model.vo.login.LoginRspVO loginRspVO = com.atxbai.online.model.vo.login.LoginRspVO.builder().token(token).title(title).build();
+        LoginRspVO loginRspVO = LoginRspVO.builder().token(token).title(title).build();
 
         // TODO 通过工具类返回对象
         ResultUtil.ok(response, Response.success(loginRspVO));
