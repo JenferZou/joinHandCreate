@@ -21,8 +21,8 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     private ResumeMapper resumeMapper;
     @Override
     public Resume selectBySno(String sno) {
-         Resume resume = resumeMapper.selectBySno(sno);
-         return resume;
+        Resume resume = resumeMapper.selectBySno(sno);
+        return resume;
     }
 
     @Override
