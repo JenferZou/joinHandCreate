@@ -11,4 +11,7 @@ public interface ResumeService {
 
 
      Resume selectBySno(String sno);
+
+
+     void updateResume(Resume resume);
 }

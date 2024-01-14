@@ -24,4 +24,9 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
          Resume resume = resumeMapper.selectBySno(sno);
          return resume;
     }
+
+    @Override
+    public void updateResume(Resume resume) {
+        resumeMapper.updateById(resume);
+    }
 }

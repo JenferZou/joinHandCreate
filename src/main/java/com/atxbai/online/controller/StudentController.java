@@ -64,11 +64,26 @@ public class StudentController {
     }
 
     @GetMapping("/StudentResume")
-    @ApiOperation(value = "个人简历页面下半部分")
+    @ApiOperation(value = "展示个人简历页面个人经历")
     public Response StudentResume(@RequestHeader("UserToken")String UserToken){
         String sno = jwtTokenHelper.getUsernameByToken(UserToken);
         Resume resume = resumeService.selectBySno(sno);
         return Response.success(resume);
     }
 
+
+    @PutMapping("/editMessage")
+    @ApiOperation(value = "修改个人信息")
+    public Response editMessage(@RequestBody Student student){
+        studentService.updateStudent(student);
+        return Response.success();
+    }
+
+
+    @PutMapping("/edit")
+    @ApiOperation(value = "修改个人经历部分")
+    public Response edit(@RequestBody Resume resume){
+        resumeService.updateResume(resume);
+        return Response.success();
+    }
 }
