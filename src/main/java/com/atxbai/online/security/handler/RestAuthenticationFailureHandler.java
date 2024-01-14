@@ -27,7 +27,7 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException{
         // 提示错误
-        log.warn("AuthenticationException: ", exception.getMessage());
+        log.warn("AuthenticationException: {}", exception.getMessage());
         // 判断异常
         if(exception instanceof UsernameOrPasswordNullException){
             // 用户名或密码为空
