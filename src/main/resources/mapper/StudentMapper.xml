@@ -75,4 +75,9 @@
         </set>
         where id = #{id}
     </update>
+    <update id="resetPassword" >
+      update student
+      set password = #{password}
+      where id = #{id}
+    </update>
 </mapper>

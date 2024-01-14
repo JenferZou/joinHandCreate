@@ -6,15 +6,21 @@ import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.DelieverResumeMapper;
 import com.atxbai.online.mapper.TeacherMapper;
 import com.atxbai.online.model.pojo.DelieverResume;
+import com.atxbai.online.model.pojo.Manager;
+import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -167,5 +173,36 @@ public class TeacherServiceImpl implements TeacherService {
         int update = delieverResumeMapper.update(delieverResume, wrapper);
         // 返回
         return update == 1 ? Response.success() : Response.fail();
+    }
+
+    @Override
+    public Map<String, Object> listTeacher(int page, int limit, String keyword) {
+        QueryWrapper<Teacher> wrapper = new QueryWrapper<>();
+        if (keyword != null && !"".equals(keyword) && keyword.length() > 0) {
+            wrapper.like("name", keyword).or().eq("no", keyword);
+        }
+        Long count = teacherMapper.selectCount(wrapper);
+        // 创建分页对象
+        Page<Teacher> p = new Page<>(page, limit, count);
+        // 执行分页查询
+        IPage<Teacher> teacherIPage = teacherMapper.selectPage(p, wrapper);
+        // 获取查询结果
+        List<Teacher> teachers = teacherIPage.getRecords();
+        Map<String, Object> map = new HashMap<>();
+        map.put("teachers", teachers);
+        map.put("total", teacherIPage.getTotal());
+        map.put("size", teacherIPage.getSize());
+        map.put("page", teacherIPage.getPages());
+        return map;
+    }
+
+    @Override
+    public Teacher getTeacherByNo(Integer no) {
+        return teacherMapper.selectById(no);
+    }
+
+    @Override
+    public boolean updateTeacher(Teacher teacher) {
+        return teacherMapper.updateTeacher(teacher);
     }
 }

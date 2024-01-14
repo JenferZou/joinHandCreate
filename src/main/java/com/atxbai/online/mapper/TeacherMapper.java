@@ -19,4 +19,11 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
         wrapper.eq(Teacher::getNo,username);
         return selectOne(wrapper);
     }
+
+    /**
+     * 修改老师信息
+     * @param teacher 老师实体
+     * @return
+     */
+    boolean updateTeacher(Teacher teacher);
 }
