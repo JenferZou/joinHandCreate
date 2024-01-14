@@ -3,10 +3,7 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
-import com.atxbai.online.mapper.DelieverResumeMapper;
-import com.atxbai.online.mapper.ResumeMapper;
-import com.atxbai.online.mapper.StudentMapper;
-import com.atxbai.online.mapper.TeacherMapper;
+import com.atxbai.online.mapper.*;
 import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
@@ -48,6 +45,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private ResumeMapper resumeMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
@@ -183,6 +183,8 @@ public class TeacherServiceImpl implements TeacherService {
         delieverResume.setMark(1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
+        // 如果为 1 ，给消息表中添加数据，表示学生通过学习
+
         // 返回
         return update == 1 ? Response.success() : Response.fail();
     }

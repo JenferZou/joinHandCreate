@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @content:
  */
 @Mapper
-public interface Message extends BaseMapper<Message> {
+public interface MessageMapper extends BaseMapper<MessageMapper> {
 }
