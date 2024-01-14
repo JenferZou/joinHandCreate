@@ -1,7 +1,9 @@
 package com.atxbai.online.service;
 
+import com.atxbai.online.model.vo.ProjectPageReqVo;
 import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;
@@ -41,4 +43,12 @@ public interface ProjectService extends IService<Project> {
      */
 
    public boolean multiDeleteProject(Integer[] ids);
+
+    void saveProject(ProjectReqVo projectReqVo,String header);
+
+    IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo,String header);
+
+
+    void update(ProjectReqVo projectReqVo);
 }
+

@@ -5,12 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectReqVo {
+    private Integer id;
+
     @NotBlank(message = "指导老师不能为空不能为空")
     private String mentor;
 
@@ -18,7 +21,7 @@ public class ProjectReqVo {
     private String name;
 
     //    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
-    @NotBlank(message = "开始时间不能为空")
+    @NotNull(message = "开始时间不能为空")
     private LocalDateTime startTime;
 
     @NotBlank(message = "专业要求不能为空")

@@ -3,13 +3,16 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.ProjectMapper;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.vo.ProjectPageReqVo;
 import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -86,4 +89,74 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public boolean multiDeleteProject(Integer[] ids) {
         return projectMapper.deleteBatchIds(Arrays.asList(ids)) >= 1;
     }
+
+    /**
+     * 新增项目
+     * @param projectReqVo
+     */
+    @Override
+    public void saveProject(ProjectReqVo projectReqVo,String header) {
+        Project project = new Project();
+
+        //对象属性拷贝
+        BeanUtils.copyProperties(projectReqVo, project);
+
+        // 解析 token
+        String token = StringUtils.substring(header, 7);
+        Integer tno = Integer.valueOf(jwtTokenHelper.getUsernameByToken(token));
+        project.setTno(tno);
+
+        projectMapper.insert(project);
+    }
+
+    /**
+     * 项目分页
+     * @param pageReqVo
+     * @return
+     */
+    @Override
+    public IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo,String header) {
+        //分页参数
+        Page<Project> projectPage = new Page<>(pageReqVo.getPage(),pageReqVo.getPageSize());
+
+        // 解析 token
+        String token = StringUtils.substring(header, 7);
+        String tno = jwtTokenHelper.getUsernameByToken(token);
+
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        //只查询当前登录老师的项目
+        queryWrapper.eq(Project::getTno,tno);
+
+
+        //条件查询
+        if(pageReqVo.getName()!=null && !pageReqVo.getName().isEmpty()){
+            queryWrapper.like(Project::getName,pageReqVo.getName());
+        }
+        if(pageReqVo.getStartTime()!=null){
+            //大于等于
+            queryWrapper.ge(Project::getStartTime,pageReqVo.getStartTime());
+        }
+        if(pageReqVo.getNeedMajor()!=null && !pageReqVo.getNeedMajor().isEmpty()){
+            queryWrapper.like(Project::getNeedMajor,pageReqVo.getNeedMajor());
+        }
+        if(pageReqVo.getExpectedCompetition()!=null && !pageReqVo.getExpectedCompetition().isEmpty()){
+            queryWrapper.like(Project::getExpectedCompetition,pageReqVo.getExpectedCompetition());
+        }
+
+
+        IPage<Project> projectIPage = projectMapper.selectPage(projectPage, queryWrapper);
+        return projectIPage;
+    }
+
+
+
+
+    @Override
+    public void update(ProjectReqVo projectReqVo) {
+        Project project = new Project();
+        //对象属性拷贝
+        BeanUtils.copyProperties(projectReqVo, project);
+        projectMapper.updateById(project);
+    }
+
 }
