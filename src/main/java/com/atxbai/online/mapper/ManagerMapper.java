@@ -18,7 +18,7 @@ public interface ManagerMapper extends BaseMapper<Manager> {
 
     default Manager findByUsername(String username){
         LambdaQueryWrapper<Manager> wrapper = new LambdaQueryWrapper<>();
-        wrapper.ge(Manager::getNo,username);
+        wrapper.eq(Manager::getNo,Integer.valueOf(username));
         return selectOne(wrapper);
     }
 }

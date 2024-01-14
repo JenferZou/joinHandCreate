@@ -34,4 +34,12 @@ public interface StudentMapper extends BaseMapper<Student> {
      * @return
      */
     int updateStudent(Student student);
+    /**
+     * 重置密码
+     * @param password 密码
+     * @param id id
+     * @return
+     */
+
+    boolean resetPassword(String password, Integer id);
 }

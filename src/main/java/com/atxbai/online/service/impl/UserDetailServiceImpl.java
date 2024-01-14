@@ -54,7 +54,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
             // 出现问题去认证失败处理器
             throw new UsernameNotFoundException("用户不存在");
         }
-
         // 判断是哪个登录，教师，学生，管理员，返回认证信息
         if (Objects.nonNull(student)) {
             // 返回学生

@@ -2,9 +2,12 @@ package com.atxbai.online.controller;
 
 import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
+import com.atxbai.online.service.ManagerService;
 import com.atxbai.online.service.ProjectService;
 import com.atxbai.online.service.StudentService;
 import io.swagger.annotations.Api;
@@ -15,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -33,6 +37,8 @@ public class ManagerController {
     private StudentService studentService;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private ManagerService managerService;
 
 /*    @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
@@ -107,6 +113,18 @@ public class ManagerController {
         data.setErrorCode("200");
         return data;
     }
+    @PostMapping("/student/changePassword")
+    @ApiOperation(value = "修改密码")
+    public Object changePassword(@RequestBody Integer id) {
+        if (studentService.resetPassword(id)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("修改成功");
+            return data;
+        } else {
+            return Response.fail("修改失败");
+        }
+    }
 
     @PostMapping("/modify/password")
     @ApiOperation(value = "修改密码")
@@ -125,5 +143,65 @@ public class ManagerController {
         data.setData(d);
         data.setErrorCode("200");
         return data;
+    }
+    @PostMapping("/project/modify")
+    @ApiOperation(value = "修改项目信息")
+    public Object projectModify(@RequestBody  Project project) {
+        if (projectService.updateProject(project)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("修改成功");
+            return data;
+        } else {
+            return Response.fail("修改失败");
+        }
+    }
+    @PostMapping("/project/delete")
+    @ApiOperation(value = "删除项目信息")
+    public Object projectDelete(@RequestBody Integer id) {
+        if (projectService.deleteProject(id)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("删除成功");
+            return data;
+        } else {
+            return Response.fail("删除失败");
+        }
+    }
+    @PostMapping("/project/multidelete")
+    @ApiOperation(value = "批量删除项目信息")
+    public Object projectDelete(@RequestBody Integer[] ids) {
+        if (projectService.multiDeleteProject(ids)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("删除成功");
+            return data;
+        } else {
+            return Response.fail("删除失败");
+        }
+    }
+    @GetMapping("/manager/list")
+    @ApiOperation(value = "获取管理员信息")
+    public Object managerGet(int page,int limit,String keyword) {
+        if (page < 0 || limit < 0) {
+            return Response.fail("参数错误");
+        }
+        Response<Map<String, Object>> data = new Response<>();
+        Map<String, Object> d =managerService.listManager(page, limit, keyword);
+        data.setData(d);
+        data.setErrorCode("200");
+        return data;
+    }
+    @PostMapping("/manager/delete")
+    @ApiOperation(value = "删除管理员信息")
+    public Object managerDelete(@RequestBody Integer id) {
+        if (managerService.deleteManager(id)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("删除成功");
+            return data;
+        } else {
+            return Response.fail("删除失败");
+        }
     }
 }

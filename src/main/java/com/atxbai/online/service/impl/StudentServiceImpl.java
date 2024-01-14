@@ -104,4 +104,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         map.put("page",studentPage.getPages());
         return map;
     }
+
+    @Override
+    public boolean resetPassword(Integer id) {
+        String password =passwordEncoder.encode("123456");
+
+        return  studentMapper.resetPassword(password,id);
+    }
 }

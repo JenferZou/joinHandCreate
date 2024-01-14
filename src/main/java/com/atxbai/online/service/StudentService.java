@@ -50,4 +50,11 @@ public interface StudentService extends IService<Student> {
      */
 
   public   Map<String, Object> searchStudent(SearchDataVO searchDataVO);
+  /**
+     * 重置密码
+     * @param id id
+     * @return
+     */
+
+   public boolean resetPassword(Integer id);
 }

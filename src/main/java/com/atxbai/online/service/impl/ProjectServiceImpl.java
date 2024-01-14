@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     /**
      * 新增项目
+     *
      * @param projectReqVo
      */
     @Override
@@ -50,23 +52,38 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     @Override
-    public Map<String, Object> listProject(int page, int limit,String keyword) {
-        QueryWrapper<Project> wrapper=new QueryWrapper<>();
-        if(keyword!=null&&!"".equals(keyword)&&keyword.length()>0){
-            wrapper.like("name",keyword);
+    public Map<String, Object> listProject(int page, int limit, String keyword) {
+        QueryWrapper<Project> wrapper = new QueryWrapper<>();
+        if (keyword != null && !"".equals(keyword) && keyword.length() > 0) {
+            wrapper.like("name", keyword);
         }
         Long count = projectMapper.selectCount(wrapper);
         // 创建分页对象
-        Page<Project> p = new Page<>(page, limit,count);
+        Page<Project> p = new Page<>(page, limit, count);
         // 执行分页查询
         IPage<Project> projectIPage = projectMapper.selectPage(p, wrapper);
         // 获取查询结果
         List<Project> projects = projectIPage.getRecords();
-        Map<String,Object> map = new HashMap<>();
-        map.put("projects",projects);
-        map.put("total",projectIPage.getTotal());
-        map.put("size",projectIPage.getSize());
-        map.put("page",projectIPage.getPages());
+        Map<String, Object> map = new HashMap<>();
+        map.put("projects", projects);
+        map.put("total", projectIPage.getTotal());
+        map.put("size", projectIPage.getSize());
+        map.put("page", projectIPage.getPages());
         return map;
+    }
+
+    @Override
+    public boolean updateProject(Project project) {
+        return projectMapper.updateById(project) >= 1;
+    }
+
+    @Override
+    public boolean deleteProject(Integer id) {
+        return projectMapper.deleteById(id) >= 1;
+    }
+
+    @Override
+    public boolean multiDeleteProject(Integer[] ids) {
+        return projectMapper.deleteBatchIds(Arrays.asList(ids)) >= 1;
     }
 }

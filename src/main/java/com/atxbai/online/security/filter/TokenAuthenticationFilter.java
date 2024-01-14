@@ -73,7 +73,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if (requestURI.startsWith("/admin") || requestURI.startsWith("/student") || requestURI.startsWith("/teacher")){
             // 从请求头中获取 key 为 Authorization 的值
             String header = request.getHeader(tokenHeaderKey);
-
             // 判断 value 值是否以 Bearer 开头
             if (StringUtils.startsWith(header, tokenPrefix)) {
                 // 截取 Token 令牌

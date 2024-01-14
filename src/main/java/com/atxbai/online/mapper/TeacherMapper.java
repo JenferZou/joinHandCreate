@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TeacherMapper extends BaseMapper<Teacher> {
     default Teacher findByUsername(String username){
         LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
-        wrapper.ge(Teacher::getNo,username);
+        wrapper.eq(Teacher::getNo,username);
         return selectOne(wrapper);
     }
 }
