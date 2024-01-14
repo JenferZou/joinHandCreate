@@ -5,6 +5,7 @@ import com.atxbai.online.model.pojo.Student;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author 小白
@@ -41,5 +42,5 @@ public interface StudentMapper extends BaseMapper<Student> {
      * @return
      */
 
-    boolean resetPassword(String password, Integer id);
+    boolean resetPassword(@Param("password")String password, @Param("id") Integer id);
 }

@@ -4,12 +4,14 @@ import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
 import com.atxbai.online.service.ManagerService;
 import com.atxbai.online.service.ProjectService;
 import com.atxbai.online.service.StudentService;
+import com.atxbai.online.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,8 @@ public class ManagerController {
     private ProjectService projectService;
     @Autowired
     private ManagerService managerService;
+    @Autowired
+    private TeacherService teacherService;
 
 /*    @PostMapping("/test/save")
     @ApiOperation(value = "测试接口")
@@ -202,6 +206,39 @@ public class ManagerController {
             return data;
         } else {
             return Response.fail("删除失败");
+        }
+    }
+    @GetMapping("/teacher/list")
+    @ApiOperation(value = "获取教师信息")
+    public Object teacherGet(int page,int limit,String keyword) {
+        if (page < 0 || limit < 0) {
+            return Response.fail("参数错误");
+        }
+        Response<Map<String, Object>> data = new Response<>();
+        Map<String, Object> d =teacherService.listTeacher(page, limit, keyword);
+        data.setData(d);
+        data.setErrorCode("200");
+        return data;
+    }
+    @GetMapping("/teacher/preedit/{no}")
+    @ApiOperation(value = "获取单个教师信息")
+    public Object teacherPreedit(@PathVariable(value="no")Integer no) {
+        Response<Teacher> data = new Response<>();
+        Teacher t =teacherService.getTeacherByNo(no);
+        data.setData(t);
+        data.setErrorCode("200");
+        return data;
+    }
+    @PostMapping("/teacher/modify")
+    @ApiOperation(value = "修改教师信息")
+    public Object teacherModify(@RequestBody Teacher teacher) {
+        if (teacherService.updateTeacher(teacher)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("修改成功");
+            return data;
+        } else {
+            return Response.fail("修改失败");
         }
     }
 }

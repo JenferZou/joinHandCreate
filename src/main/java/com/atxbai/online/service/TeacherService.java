@@ -2,11 +2,14 @@ package com.atxbai.online.service;
 
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.teacher.AgreeDelieverReqVO;
 import com.atxbai.online.model.vo.teacher.GetDelieverReqVO;
 import com.atxbai.online.model.vo.teacher.RefuseDelieverReqVO;
 import com.atxbai.online.model.vo.teacher.SearchNameRDReqVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
  * @author 小白
@@ -28,4 +31,27 @@ public interface TeacherService {
     Response refuseDeliever(RefuseDelieverReqVO refuseDelieverReqVO, String header);
 
     Response agreeDeliever(AgreeDelieverReqVO agreeDelieverReqVO, String header);
+
+    /**
+     * 列出教师信息
+     * @param page 页码
+     * @param limit 每页数量
+     * @param keyword 查询关键字
+     * @return
+     */
+   public Map<String, Object> listTeacher(int page, int limit, String keyword);
+   /**
+     * 根据no获取教师信息
+     * @param no id信息
+     * @return
+     */
+
+   public Teacher getTeacherByNo(Integer no);
+   /**
+     * 修改教师信息
+     * @param teacher 修改实体
+     * @return
+     */
+
+   public boolean updateTeacher(Teacher teacher);
 }
