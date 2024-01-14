@@ -66,6 +66,19 @@ public class ProjectController {
     }
 
 
+    @ApiOperation(value = "根据项目名称模糊查询获取项目详情")
+    @GetMapping("/getProjectByNameLike")
+    public PageResponse<Project> getProjectByNameLike(@RequestParam("name") String name, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
+        if(name == null){
+            throw new BizException(ResponseCodeEnum.CODE_600);
+        }
+        Page<Project> projectPage = new Page<>(pageNo == null? 1 : pageNo, pageSize == null? 10 : pageSize);
+        LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        projectLambdaQueryWrapper.like(Project::getName, name);
+        IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
+        return PageResponse.success(page,page.getRecords());
+    }
+
 
 
 

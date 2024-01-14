@@ -87,6 +87,10 @@ public class DelieverResumeController {
         if(project == null){
             return Response.fail("项目不存在");
         }
+        DelieverResume delieverDb = delieverResumeService.getOne(new LambdaQueryWrapper<DelieverResume>().eq(DelieverResume::getSno, sno).eq(DelieverResume::getPid, pid));
+        if(delieverDb != null){
+            return Response.fail("请勿多次投递");
+        }
         delieverResume.setContent(project.getContent());
         delieverResume.setTno(project.getTno());
         delieverResume.setMark(Constant.RESUME_NO_AUDIT);
@@ -115,6 +119,19 @@ public class DelieverResumeController {
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno);
+        IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
+        return PageResponse.success(page, page.getRecords());
+
+    }
+
+    @ApiOperation(value = "根据sno以及项目名称模糊查询获取投递的简历")
+    @GetMapping("/getdelieverResumeBysnoAndName")
+    public PageResponse<DelieverResume> getdelieverResumeBysnoAndName(@RequestHeader("Authorization") String userToken,@RequestParam("name")String name,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
+        String token = StringUtils.substring(userToken, 7);
+        String sno = jwtTokenHelper.getUsernameByToken(token);
+        Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
+        LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno).like(DelieverResume::getProjectName,name);
         IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
         return PageResponse.success(page, page.getRecords());
 
