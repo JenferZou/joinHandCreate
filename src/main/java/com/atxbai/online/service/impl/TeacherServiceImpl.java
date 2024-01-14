@@ -4,15 +4,19 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.DelieverResumeMapper;
+import com.atxbai.online.mapper.ResumeMapper;
+import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.mapper.TeacherMapper;
 import com.atxbai.online.model.pojo.DelieverResume;
-import com.atxbai.online.model.pojo.Manager;
+import com.atxbai.online.model.pojo.Resume;
+import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +44,17 @@ public class TeacherServiceImpl implements TeacherService {
     private DelieverResumeMapper delieverResumeMapper;
 
     @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private ResumeMapper resumeMapper;
+
+    @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
     /**
      * 查询全部申请
+     *
      * @param getDelieverReqVO
      * @param header
      * @return
@@ -59,15 +70,15 @@ public class TeacherServiceImpl implements TeacherService {
         Page<DelieverResume> pageObj = new Page<>(Long.parseLong(page), Long.parseLong(limit));
         // 设置条件
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno,tno);
-        wrapper.eq(DelieverResume::getMark,0);
+        wrapper.eq(DelieverResume::getTno, tno);
+        wrapper.eq(DelieverResume::getMark, 0);
         // 查询
         Page<DelieverResume> delieverResumePage = delieverResumeMapper.selectPage(pageObj, wrapper);
         List<DelieverResume> list = delieverResumePage.getRecords();
         // 将 DO --> VO
         List<GetDelieverRspVO> getDelieverRspVOS = null;
         // 判断 list 是否为空
-        if (Objects.nonNull(list)){
+        if (Objects.nonNull(list)) {
             getDelieverRspVOS = list.stream().map(rd -> GetDelieverRspVO
                     .builder()
                     .pid(rd.getPid())
@@ -84,6 +95,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 根据学生姓名查询申请简历
+     *
      * @param searchNameRDReqVO
      * @param header
      * @return
@@ -100,17 +112,17 @@ public class TeacherServiceImpl implements TeacherService {
         Page<DelieverResume> pageObj = new Page<>(Long.parseLong(page), Long.parseLong(limit));
         // 设置条件
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno,tno);
-        wrapper.eq(DelieverResume::getMark,0);
+        wrapper.eq(DelieverResume::getTno, tno);
+        wrapper.eq(DelieverResume::getMark, 0);
         // 设置模糊查询
-        wrapper.like(StringUtils.isNotBlank(searchName.trim()),DelieverResume::getSName,searchName);
+        wrapper.like(StringUtils.isNotBlank(searchName.trim()), DelieverResume::getSName, searchName);
         // 查询
         Page<DelieverResume> delieverResumePage = delieverResumeMapper.selectPage(pageObj, wrapper);
         List<DelieverResume> list = delieverResumePage.getRecords();
         // 将 DO --> VO
         List<GetDelieverRspVO> getDelieverRspVOS = null;
         // 判断 list 是否为空
-        if (Objects.nonNull(list)){
+        if (Objects.nonNull(list)) {
             getDelieverRspVOS = list.stream().map(rd -> GetDelieverRspVO
                     .builder()
                     .pid(rd.getPid())
@@ -135,15 +147,15 @@ public class TeacherServiceImpl implements TeacherService {
         String sno = refuseDelieverReqVO.getSno();
         // 查询对象
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno,tno);
-        wrapper.eq(DelieverResume::getPid,pid);
-        wrapper.eq(DelieverResume::getSno,sno);
+        wrapper.eq(DelieverResume::getTno, tno);
+        wrapper.eq(DelieverResume::getPid, pid);
+        wrapper.eq(DelieverResume::getSno, sno);
         // 要判断一下是没有审批的对象
-        wrapper.ge(DelieverResume::getMark,0);
+        wrapper.ge(DelieverResume::getMark, 0);
         // 查询对象
         DelieverResume delieverResume = delieverResumeMapper.selectOne(wrapper);
         // 设置拒绝
-         delieverResume.setMark(-1);
+        delieverResume.setMark(-1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
         // 返回
@@ -160,11 +172,11 @@ public class TeacherServiceImpl implements TeacherService {
         String sno = agreeDelieverReqVO.getSno();
         // 查询对象
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno,tno);
-        wrapper.eq(DelieverResume::getPid,pid);
-        wrapper.eq(DelieverResume::getSno,sno);
+        wrapper.eq(DelieverResume::getTno, tno);
+        wrapper.eq(DelieverResume::getPid, pid);
+        wrapper.eq(DelieverResume::getSno, sno);
         // 要判断一下是没有审批的对象
-        wrapper.ge(DelieverResume::getMark,0);
+        wrapper.ge(DelieverResume::getMark, 0);
         // 查询对象
         DelieverResume delieverResume = delieverResumeMapper.selectOne(wrapper);
         // 设置拒绝
@@ -204,5 +216,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean updateTeacher(Teacher teacher) {
         return teacherMapper.updateTeacher(teacher);
+    }
+
+    @Override
+    public Response lookStudentResume(LookStudentResumeReqVO lookStudentResumeReqVO) {
+        String sno = lookStudentResumeReqVO.getSno();
+        Student student = studentMapper.selectOne(Wrappers.<Student>lambdaQuery().eq(Student::getSno, sno));
+        Resume resume = resumeMapper.selectOne(Wrappers.<Resume>lambdaQuery().eq(Resume::getSno, sno));
+        LookStudentResumeRspVO build = LookStudentResumeRspVO.builder().studentInfo(student).resumeInfo(resume).build();
+        return Response.success(build);
     }
 }

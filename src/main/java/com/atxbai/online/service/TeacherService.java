@@ -3,10 +3,7 @@ package com.atxbai.online.service;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Teacher;
-import com.atxbai.online.model.vo.teacher.AgreeDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.GetDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.RefuseDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.SearchNameRDReqVO;
+import com.atxbai.online.model.vo.teacher.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;
@@ -54,4 +51,9 @@ public interface TeacherService {
      */
 
    public boolean updateTeacher(Teacher teacher);
+
+    /**
+     * 获取学生的个人和学生简历信息
+     */
+    Response lookStudentResume(LookStudentResumeReqVO lookStudentResumeReqVO);
 }

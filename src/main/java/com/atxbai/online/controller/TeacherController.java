@@ -3,10 +3,7 @@ package com.atxbai.online.controller;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 
-import com.atxbai.online.model.vo.teacher.AgreeDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.GetDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.RefuseDelieverReqVO;
-import com.atxbai.online.model.vo.teacher.SearchNameRDReqVO;
+import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,4 +52,11 @@ public class TeacherController {
     public Response agreeDeliever(@RequestBody @Validated AgreeDelieverReqVO agreeDelieverReqVO, @RequestHeader("Authorization") String header){
         return teacherService.agreeDeliever(agreeDelieverReqVO,header);
     }
+
+    @PostMapping("/lookStudentResume")
+    @ApiOperation(value = "获取学生个人简历和项目信息")
+    public Response lookStudentResume(@RequestBody @Validated LookStudentResumeReqVO lookStudentResumeReqVO){
+        return teacherService.lookStudentResume(lookStudentResumeReqVO);
+    }
+
 }
