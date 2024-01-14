@@ -1,9 +1,11 @@
 package com.atxbai.online.model.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("message")
+@Builder
 public class Message {
     @TableId(type = IdType.AUTO)
     private int mid;
@@ -37,6 +40,7 @@ public class Message {
     /**
      * 创建时间
      */
+    @TableField("createTime")
     private LocalDateTime createDateTime;
     /**
      * 消息内容

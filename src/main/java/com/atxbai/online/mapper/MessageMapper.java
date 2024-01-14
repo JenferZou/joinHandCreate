@@ -1,5 +1,6 @@
 package com.atxbai.online.mapper;
 
+import com.atxbai.online.model.pojo.Message;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,5 +11,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @content:
  */
 @Mapper
-public interface MessageMapper extends BaseMapper<MessageMapper> {
+public interface MessageMapper extends BaseMapper<Message> {
 }

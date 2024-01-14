@@ -4,10 +4,7 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.*;
-import com.atxbai.online.model.pojo.DelieverResume;
-import com.atxbai.online.model.pojo.Resume;
-import com.atxbai.online.model.pojo.Student;
-import com.atxbai.online.model.pojo.Teacher;
+import com.atxbai.online.model.pojo.*;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,7 +15,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +137,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response refuseDeliever(RefuseDelieverReqVO refuseDelieverReqVO, String header) {
         // 解析 token
         String token = StringUtils.substring(header, 7);
@@ -158,11 +158,21 @@ public class TeacherServiceImpl implements TeacherService {
         delieverResume.setMark(-1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
+        // 如果为 1 ，给消息表中添加数据，表示学生通过项目的进度
+        Message message = Message.builder()
+                .tno(Integer.parseInt(tno))
+                .sno(sno).pid(pid)
+                .createDateTime(LocalDateTime.now())
+                .content("学生" + delieverResume.getSName() + "被拒绝加入" + delieverResume.getProjectName() + "项目组!")
+                .build();
+        // 插入数据
+        int insert = messageMapper.insert(message);
         // 返回
-        return update == 1 ? Response.success() : Response.fail();
+        return insert == 1 ? Response.success() : Response.fail();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response agreeDeliever(AgreeDelieverReqVO agreeDelieverReqVO, String header) {
         // 解析 token
         String token = StringUtils.substring(header, 7);
@@ -183,10 +193,17 @@ public class TeacherServiceImpl implements TeacherService {
         delieverResume.setMark(1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
-        // 如果为 1 ，给消息表中添加数据，表示学生通过学习
-
+        // 如果为 1 ，给消息表中添加数据，表示学生通过项目的进度
+        Message message = Message.builder()
+                .tno(Integer.parseInt(tno))
+                .sno(sno).pid(pid)
+                .createDateTime(LocalDateTime.now())
+                .content("学生" + delieverResume.getSName() + "被同意加入" + delieverResume.getProjectName() + "项目组!")
+                .build();
+        // 插入数据
+        int insert = messageMapper.insert(message);
         // 返回
-        return update == 1 ? Response.success() : Response.fail();
+        return insert == 1 ? Response.success() : Response.fail();
     }
 
     @Override
