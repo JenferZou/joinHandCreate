@@ -5,6 +5,7 @@ import com.atxbai.online.model.pojo.Student;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author 小白
@@ -42,4 +43,7 @@ public interface StudentMapper extends BaseMapper<Student> {
      */
 
     boolean resetPassword(String password, Integer id);
+
+    @Select("SELECT * from student where sno = #{sno}")
+    Student selectBySno(String sno);
 }

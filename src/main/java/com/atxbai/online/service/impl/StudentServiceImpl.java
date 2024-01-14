@@ -111,4 +111,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         return  studentMapper.resetPassword(password,id);
     }
+
+    @Override
+    public Student selectBySno(String sno) {
+        Student student = studentMapper.selectBySno(sno);
+        return student;
+    }
 }

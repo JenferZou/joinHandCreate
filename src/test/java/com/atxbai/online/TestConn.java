@@ -29,4 +29,12 @@ public class TestConn {
     public void testToken() {
         System.out.println(jwtTokenHelper.parseToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMDAwMDAiLCJpc3MiOiJhdHhiYWkiLCJpYXQiOjE3MDQ5NTQyOTYsImV4cCI6MTcxMDEzODI5Nn0.T8viRsCTWqyvSe8shpbwB6tQ9AbUL4gw4Jqsl3TBEzhy4K1kwzHk5bYme70j6DdnwoI3y-ETAYBfCRjEtFjvQQ"));
     }
+
+    @Test
+    public void getCurrent(){
+
+        System.out.println(
+                jwtTokenHelper.getUsernameByToken(
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDAwMDAiLCJpc3MiOiJhdHhiYWkiLCJpYXQiOjE3MDUxOTE2ODEsImV4cCI6MTcxMDM3NTY4MX0.33SsGBkYYqTkjPqkPvha_mpLGOa2F7rHkVdEIhOyiMqM1dpOoN1gzbA3Gm3_q0L9k48D2Yi_dup-PLWjep0L9A"));
+    }
 }

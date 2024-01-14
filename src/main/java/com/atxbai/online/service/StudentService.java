@@ -57,4 +57,6 @@ public interface StudentService extends IService<Student> {
      */
 
    public boolean resetPassword(Integer id);
+
+    Student selectBySno(String sno);
 }
