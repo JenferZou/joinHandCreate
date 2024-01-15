@@ -46,7 +46,7 @@ public class MessageController {
         if(student==null){
             throw new BizException(ResponseCodeEnum.CODE_600);
         }
-        Page<MessageVo> messagePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 5 : pageSize);
+        Page<MessageVo> messagePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 4 : pageSize);
         Page<MessageVo> page = messageService.getMessageListDescBySno(messagePage, sno);
         return PageResponse.success(page, page.getRecords());
 

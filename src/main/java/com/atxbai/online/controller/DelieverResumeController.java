@@ -114,7 +114,7 @@ public class DelieverResumeController {
         String sno = jwtTokenHelper.getUsernameByToken(token);
         Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno);
+        resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno).orderByDesc(DelieverResume::getId);
         IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
         return PageResponse.success(page, page.getRecords());
 
