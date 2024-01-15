@@ -3,15 +3,13 @@ package com.atxbai.online.controller;
 import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Project;
+import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
-import com.atxbai.online.service.ManagerService;
-import com.atxbai.online.service.ProjectService;
-import com.atxbai.online.service.StudentService;
-import com.atxbai.online.service.TeacherService;
+import com.atxbai.online.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +41,8 @@ public class ManagerController {
     private ManagerService managerService;
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private ResumeService resumeService;
 
 
     @GetMapping("/dauList")
@@ -130,10 +130,10 @@ public class ManagerController {
         if (studentService.resetPassword(id)) {
             Response<String> data = new Response<>();
             data.setErrorCode("200");
-            data.setMessage("修改成功");
+            data.setMessage("重置成功,密码为123456");
             return data;
         } else {
-            return Response.fail("修改失败");
+            return Response.fail("重置失败");
         }
     }
 
@@ -193,12 +193,12 @@ public class ManagerController {
     }
     @GetMapping("/manager/list")
     @ApiOperation(value = "获取管理员信息")
-    public Object managerGet(int page,int limit,String keyword) {
+    public Object managerGet(int page,int limit,String keyword, @RequestHeader("Authorization") String header) {
         if (page < 0 || limit < 0) {
             return Response.fail("参数错误");
         }
         Response<Map<String, Object>> data = new Response<>();
-        Map<String, Object> d =managerService.listManager(page, limit, keyword);
+        Map<String, Object> d =managerService.listManager(page, limit, keyword,header);
         data.setData(d);
         data.setErrorCode("200");
         return data;
@@ -246,6 +246,63 @@ public class ManagerController {
             return data;
         } else {
             return Response.fail("修改失败");
+        }
+    }
+    @PostMapping("/teacher/delete")
+    @ApiOperation(value = "删除教师信息")
+    public Object teacherDelete(@RequestBody Integer id) {
+        if (teacherService.deleteTeacher(id)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("删除成功");
+            return data;
+        } else {
+            return Response.fail("删除失败");
+        }
+    }
+    @PostMapping("/teacher/add")
+    @ApiOperation(value = "添加教师信息")
+    public Object teacherAdd(@RequestBody Teacher teacher) {
+        if (teacherService.addTeacher(teacher)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("添加成功");
+            return data;
+        } else {
+            return Response.fail("添加失败");
+        }
+    }
+    @PostMapping("/teacher/resetPassword")
+    @ApiOperation(value = "重置教师密码")
+    public Object teacherResetPassword(@RequestBody Integer no) {
+        if (teacherService.resetPassword(no)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("重置成功,密码为888888");
+            return data;
+        } else {
+            return Response.fail("重置失败");
+        }
+    }
+    @GetMapping("/preview/resume/{sno}")
+    @ApiOperation(value = "预览简历及学生信息")
+    public Object previewResume(@PathVariable("sno") String sno) {
+        Response<Map<String, Object>> data = new Response<>();
+       Map<String, Object> studentAndResume = studentService.findStudentAndResume(sno);
+       data.setData(studentAndResume);
+       data.setErrorCode("200");
+        return data;
+    }
+    @PostMapping("/resume/update")
+    @ApiOperation(value = "更新简历")
+    public Object resumeUpdate(@RequestBody Resume resume) {
+        if (resume.getResumeId()!=null&&resumeService.updateById(resume)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("更新成功");
+            return data;
+        } else {
+            return Response.fail("更新失败");
         }
     }
 }

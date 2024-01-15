@@ -5,6 +5,7 @@ import com.atxbai.online.model.pojo.Teacher;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author 小白
@@ -26,4 +27,12 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
      * @return
      */
     boolean updateTeacher(Teacher teacher);
+
+    /**
+     * 重置老师密码
+     * @param password 加密密码
+     * @param no id
+     * @return
+     */
+    boolean resetPassword(@Param("password") String password, @Param("no") Integer no);
 }

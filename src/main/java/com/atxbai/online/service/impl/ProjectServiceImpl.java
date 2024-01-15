@@ -3,9 +3,12 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.mapper.ProjectMapper;
-import com.atxbai.online.model.pojo.Project;
+import com.atxbai.online.mapper.TeacherMapper;
+import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.ProjectPageReqVo;
 import com.atxbai.online.model.vo.ProjectReqVo;
+import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -32,6 +35,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Autowired
     JwtTokenHelper jwtTokenHelper;
+    @Autowired
+    private TeacherMapper teacherMapper;
 
     /**
      * 新增项目
@@ -67,6 +72,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         IPage<Project> projectIPage = projectMapper.selectPage(p, wrapper);
         // 获取查询结果
         List<Project> projects = projectIPage.getRecords();
+        //获取项目发布人
+        List<Map<String, Object>> projectsMap=new ArrayList<>();
+        projects.forEach(pro->{
+            Teacher teacher=teacherMapper.selectById(pro.getTno());
+            Map<String, Object> m=new HashMap<>();
+            m.put("project",pro);
+            m.put("tname",teacher.getName());
+            projectsMap.add(m);
+        });
         Map<String, Object> map = new HashMap<>();
         map.put("projects", projects);
         map.put("total", projectIPage.getTotal());
@@ -96,7 +110,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param projectReqVo
      */
     @Override
-    public void saveProject(ProjectReqVo projectReqVo, String header) {
+    public void saveProject(ProjectReqVo projectReqVo,String header) {
         Project project = new Project();
 
         //对象属性拷贝
@@ -113,14 +127,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     /**
      * 项目分页
-     *
      * @param pageReqVo
      * @return
      */
     @Override
-    public IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo, String header) {
+    public IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo,String header) {
         //分页参数
-        Page<Project> projectPage = new Page<>(pageReqVo.getPage(), pageReqVo.getPageSize());
+        Page<Project> projectPage = new Page<>(pageReqVo.getPage(),pageReqVo.getPageSize());
 
         // 解析 token
         String token = StringUtils.substring(header, 7);
@@ -128,21 +141,22 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         //只查询当前登录老师的项目
-        queryWrapper.eq(Project::getTno, tno);
+        queryWrapper.eq(Project::getTno,tno);
+
 
         //条件查询
-        if (pageReqVo.getName() != null && !pageReqVo.getName().isEmpty()) {
-            queryWrapper.like(Project::getName, pageReqVo.getName());
+        if(pageReqVo.getName()!=null && !pageReqVo.getName().isEmpty()){
+            queryWrapper.like(Project::getName,pageReqVo.getName());
         }
-        if (pageReqVo.getStartTime() != null) {
+        if(pageReqVo.getStartTime()!=null){
             //大于等于
-            queryWrapper.ge(Project::getStartTime, pageReqVo.getStartTime());
+            queryWrapper.ge(Project::getStartTime,pageReqVo.getStartTime());
         }
-        if (pageReqVo.getNeedMajor() != null && !pageReqVo.getNeedMajor().isEmpty()) {
-            queryWrapper.like(Project::getNeedMajor, pageReqVo.getNeedMajor());
+        if(pageReqVo.getNeedMajor()!=null && !pageReqVo.getNeedMajor().isEmpty()){
+            queryWrapper.like(Project::getNeedMajor,pageReqVo.getNeedMajor());
         }
-        if (pageReqVo.getExpectedCompetition() != null && !pageReqVo.getExpectedCompetition().isEmpty()) {
-            queryWrapper.like(Project::getExpectedCompetition, pageReqVo.getExpectedCompetition());
+        if(pageReqVo.getExpectedCompetition()!=null && !pageReqVo.getExpectedCompetition().isEmpty()){
+            queryWrapper.like(Project::getExpectedCompetition,pageReqVo.getExpectedCompetition());
         }
         IPage<Project> projectIPage = projectMapper.selectPage(projectPage, queryWrapper);
         List<Project> records = projectPage.getRecords();

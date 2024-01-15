@@ -1,6 +1,7 @@
 package com.atxbai.online.service.impl;
 
 import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.LoginMapper;
 import com.atxbai.online.mapper.ManagerMapper;
 import com.atxbai.online.mapper.StudentMapper;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ import java.util.Map;
 public class ManagerServiceImpl implements ManagerService {
     @Autowired
     private ManagerMapper managerMapper;
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
 
     @Autowired
     private LoginMapper loginMapper;
@@ -38,8 +42,11 @@ public class ManagerServiceImpl implements ManagerService {
     private TeacherMapper teacherMapper;
 
     @Override
-    public Map<String, Object> listManager(int page, int limit, String keyword) {
+    public Map<String, Object> listManager(int page, int limit, String keyword,String header) {
+        String token = StringUtils.substring(header, 7);
+        String no = jwtTokenHelper.getUsernameByToken(token);
         QueryWrapper<Manager> wrapper = new QueryWrapper<>();
+        wrapper.ne("no",no);
         if (keyword != null && !"".equals(keyword) && keyword.length() > 0) {
             wrapper.like("name", keyword);
         }

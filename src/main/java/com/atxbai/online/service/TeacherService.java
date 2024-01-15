@@ -51,6 +51,30 @@ public interface TeacherService {
      */
 
    public boolean updateTeacher(Teacher teacher);
+   /**
+     * 删除教师信息
+     * @param id id信息
+     * @return
+     */
+
+   public boolean deleteTeacher(Integer id);
+
+    /**
+     * 重置密码
+     * @param id 老师id
+     * @return
+     */
+
+   public boolean resetPassword(Integer id);
+
+    /**
+     * 添加老师
+     * @param teacher 老师实体
+     * @return
+     */
+
+   public boolean addTeacher(Teacher teacher);
+
 
     /**
      * 获取学生的个人和学生简历信息

@@ -1,5 +1,6 @@
 package com.atxbai.online.service.impl;
 
+import com.atxbai.online.mapper.ResumeMapper;
 import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,22 +31,24 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     private StudentMapper studentMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ResumeMapper resumeMapper;
 
     @Override
     public Map<String, Object> listStudent(int page, int limit) {
         Long count = studentMapper.selectCount(null);
         // 创建分页对象
-        Page<Student> p = new Page<>(page, limit,count);
+        Page<Student> p = new Page<>(page, limit, count);
 
         // 执行分页查询
         IPage<Student> studentPage = studentMapper.selectPage(p, null);
         // 获取查询结果
         List<Student> students = studentPage.getRecords();
-        Map<String,Object> map = new HashMap<>();
-        map.put("students",students);
-        map.put("total",studentPage.getTotal());
-        map.put("size",studentPage.getSize());
-        map.put("page",studentPage.getPages());
+        Map<String, Object> map = new HashMap<>();
+        map.put("students", students);
+        map.put("total", studentPage.getTotal());
+        map.put("size", studentPage.getSize());
+        map.put("page", studentPage.getPages());
         return map;
     }
 
@@ -66,55 +70,65 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public boolean addStudent(Student student) {
         student.setPassword(passwordEncoder.encode("123456"));
-        return studentMapper.insert(student)>=1;
+        return studentMapper.insert(student) >= 1;
     }
 
     @Override
     public boolean deleteStudent(Integer id) {
-        return studentMapper.deleteById(id)>=1;
+        return studentMapper.deleteById(id) >= 1;
     }
 
     @Override
     public Map<String, Object> searchStudent(SearchDataVO searchDataVO) {
-        QueryWrapper<Student> wrapper=new QueryWrapper<>();
-        if(searchDataVO.getKeyword().length()!=0){
-            wrapper.like("sName",searchDataVO.getKeyword()).or().eq("sno",searchDataVO.getKeyword());
+        QueryWrapper<Student> wrapper = new QueryWrapper<>();
+        if (searchDataVO.getKeyword().length() != 0) {
+            wrapper.like("sName", searchDataVO.getKeyword()).or().eq("sno", searchDataVO.getKeyword());
         }
-        if(searchDataVO.getClassName().length()!=0){
-            wrapper.eq("className",searchDataVO.getClassName());
+        if (searchDataVO.getClassName().length() != 0) {
+            wrapper.eq("className", searchDataVO.getClassName());
         }
-        if(searchDataVO.getSDepartment().length()!=0){
-            wrapper.eq("sDepartment",searchDataVO.getSDepartment());
+        if (searchDataVO.getSDepartment().length() != 0) {
+            wrapper.eq("sDepartment", searchDataVO.getSDepartment());
         }
-        if(searchDataVO.getSMajor().length()!=0){
-            wrapper.eq("sMajor",searchDataVO.getSMajor());
+        if (searchDataVO.getSMajor().length() != 0) {
+            wrapper.eq("sMajor", searchDataVO.getSMajor());
         }
         Long count = studentMapper.selectCount(wrapper);
         // 创建分页对象
-        Page<Student> p = new Page<>(searchDataVO.getPage(), searchDataVO.getLimit(),count);
+        Page<Student> p = new Page<>(searchDataVO.getPage(), searchDataVO.getLimit(), count);
 
         // 执行分页查询
         IPage<Student> studentPage = studentMapper.selectPage(p, wrapper);
         // 获取查询结果
         List<Student> students = studentPage.getRecords();
-        Map<String,Object> map = new HashMap<>();
-        map.put("students",students);
-        map.put("total",studentPage.getTotal());
-        map.put("size",studentPage.getSize());
-        map.put("page",studentPage.getPages());
+        Map<String, Object> map = new HashMap<>();
+        map.put("students", students);
+        map.put("total", studentPage.getTotal());
+        map.put("size", studentPage.getSize());
+        map.put("page", studentPage.getPages());
         return map;
     }
 
     @Override
     public boolean resetPassword(Integer id) {
-        String password =passwordEncoder.encode("123456");
-
-        return  studentMapper.resetPassword(password,id);
+        String password = passwordEncoder.encode("123456");
+        return studentMapper.resetPassword(password, id);
     }
 
     @Override
     public Student selectBySno(String sno) {
         Student student = studentMapper.selectBySno(sno);
         return student;
+    }
+
+    @Override
+    public Map<String, Object> findStudentAndResume(String sno) {
+        Map<String, Object> map = new HashMap<>();
+        Student student = studentMapper.findByUsername(sno);
+        map.put("student", student);
+        Resume resume =resumeMapper.selectBySno(sno);
+
+        map.put("resume", resume);
+        return map;
     }
 }

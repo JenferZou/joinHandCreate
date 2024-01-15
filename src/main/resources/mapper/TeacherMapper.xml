@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atxbai.online.mapper.TeacherMapper">
     <update id="updateTeacher" parameterType="com.atxbai.online.model.pojo.Teacher">
-        update student
+        update teacher
         <set>
             <if test="phone!= null">
                 phone = #{phone},
@@ -22,5 +22,9 @@
         </set>
         where no = #{no}
     </update>
-
+    <update id="resetPassword">
+        update teacher
+        set password = #{password}
+        where no = #{no}
+    </update>
 </mapper>

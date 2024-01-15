@@ -57,6 +57,13 @@ public interface StudentService extends IService<Student> {
      */
 
    public boolean resetPassword(Integer id);
+   /**
+     * 获取学生和简历
+     * @param sno sno
+     * @return 学生信息及简历
+     */
+
+   public Map<String, Object> findStudentAndResume(String sno);
 
     Student selectBySno(String sno);
 }

@@ -18,4 +18,5 @@ public interface ResumeMapper extends BaseMapper<Resume> {
 
     @Select("SELECT * from resume where sno = #{sno}")
     Resume selectBySno(String sno);
+
 }

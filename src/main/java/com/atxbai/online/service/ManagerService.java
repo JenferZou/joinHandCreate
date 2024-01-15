@@ -12,7 +12,7 @@ public interface ManagerService {
      * @param keyword 关键字
      * @return
      */
-   public Map<String, Object> listManager(int page, int limit, String keyword);
+   public Map<String, Object> listManager(int page, int limit, String keyword,String header);
    /**
      * 删除管理员
      * @param id id

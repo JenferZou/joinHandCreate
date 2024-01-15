@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,11 +51,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     /**
      * 查询全部申请
-     *
      * @param getDelieverReqVO
      * @param header
      * @return
@@ -70,15 +72,15 @@ public class TeacherServiceImpl implements TeacherService {
         Page<DelieverResume> pageObj = new Page<>(Long.parseLong(page), Long.parseLong(limit));
         // 设置条件
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno, tno);
-        wrapper.eq(DelieverResume::getMark, 0);
+        wrapper.eq(DelieverResume::getTno,tno);
+        wrapper.eq(DelieverResume::getMark,0);
         // 查询
         Page<DelieverResume> delieverResumePage = delieverResumeMapper.selectPage(pageObj, wrapper);
         List<DelieverResume> list = delieverResumePage.getRecords();
         // 将 DO --> VO
         List<GetDelieverRspVO> getDelieverRspVOS = null;
         // 判断 list 是否为空
-        if (Objects.nonNull(list)) {
+        if (Objects.nonNull(list)){
             getDelieverRspVOS = list.stream().map(rd -> GetDelieverRspVO
                     .builder()
                     .pid(rd.getPid())
@@ -95,7 +97,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 根据学生姓名查询申请简历
-     *
      * @param searchNameRDReqVO
      * @param header
      * @return
@@ -112,17 +113,17 @@ public class TeacherServiceImpl implements TeacherService {
         Page<DelieverResume> pageObj = new Page<>(Long.parseLong(page), Long.parseLong(limit));
         // 设置条件
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno, tno);
-        wrapper.eq(DelieverResume::getMark, 0);
+        wrapper.eq(DelieverResume::getTno,tno);
+        wrapper.eq(DelieverResume::getMark,0);
         // 设置模糊查询
-        wrapper.like(StringUtils.isNotBlank(searchName.trim()), DelieverResume::getSName, searchName);
+        wrapper.like(StringUtils.isNotBlank(searchName.trim()),DelieverResume::getSName,searchName);
         // 查询
         Page<DelieverResume> delieverResumePage = delieverResumeMapper.selectPage(pageObj, wrapper);
         List<DelieverResume> list = delieverResumePage.getRecords();
         // 将 DO --> VO
         List<GetDelieverRspVO> getDelieverRspVOS = null;
         // 判断 list 是否为空
-        if (Objects.nonNull(list)) {
+        if (Objects.nonNull(list)){
             getDelieverRspVOS = list.stream().map(rd -> GetDelieverRspVO
                     .builder()
                     .pid(rd.getPid())
@@ -148,15 +149,15 @@ public class TeacherServiceImpl implements TeacherService {
         String sno = refuseDelieverReqVO.getSno();
         // 查询对象
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno, tno);
-        wrapper.eq(DelieverResume::getPid, pid);
-        wrapper.eq(DelieverResume::getSno, sno);
+        wrapper.eq(DelieverResume::getTno,tno);
+        wrapper.eq(DelieverResume::getPid,pid);
+        wrapper.eq(DelieverResume::getSno,sno);
         // 要判断一下是没有审批的对象
-        wrapper.ge(DelieverResume::getMark, 0);
+        wrapper.ge(DelieverResume::getMark,0);
         // 查询对象
         DelieverResume delieverResume = delieverResumeMapper.selectOne(wrapper);
         // 设置拒绝
-        delieverResume.setMark(-1);
+         delieverResume.setMark(-1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
         // 如果为 1 ，给消息表中添加数据，表示学生通过项目的进度
@@ -169,7 +170,7 @@ public class TeacherServiceImpl implements TeacherService {
         // 插入数据
         int insert = messageMapper.insert(message);
         // 返回
-        return insert == 1 ? Response.success() : Response.fail();
+        return update == 1 ? Response.success() : Response.fail();
     }
 
     @Override
@@ -183,28 +184,19 @@ public class TeacherServiceImpl implements TeacherService {
         String sno = agreeDelieverReqVO.getSno();
         // 查询对象
         LambdaQueryWrapper<DelieverResume> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DelieverResume::getTno, tno);
-        wrapper.eq(DelieverResume::getPid, pid);
-        wrapper.eq(DelieverResume::getSno, sno);
+        wrapper.eq(DelieverResume::getTno,tno);
+        wrapper.eq(DelieverResume::getPid,pid);
+        wrapper.eq(DelieverResume::getSno,sno);
         // 要判断一下是没有审批的对象
-        wrapper.ge(DelieverResume::getMark, 0);
+        wrapper.ge(DelieverResume::getMark,0);
         // 查询对象
         DelieverResume delieverResume = delieverResumeMapper.selectOne(wrapper);
         // 设置拒绝
         delieverResume.setMark(1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
-        // 如果为 1 ，给消息表中添加数据，表示学生通过项目的进度
-        Message message = Message.builder()
-                .tno(Integer.parseInt(tno))
-                .sno(sno).pid(pid)
-                .createDateTime(LocalDateTime.now())
-                .content("学生" + delieverResume.getSName() + "被同意加入" + delieverResume.getProjectName() + "项目组!")
-                .build();
-        // 插入数据
-        int insert = messageMapper.insert(message);
         // 返回
-        return insert == 1 ? Response.success() : Response.fail();
+        return update == 1 ? Response.success() : Response.fail();
     }
 
     @Override
@@ -236,6 +228,22 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean updateTeacher(Teacher teacher) {
         return teacherMapper.updateTeacher(teacher);
+    }
+
+    @Override
+    public boolean deleteTeacher(Integer id) {
+        return teacherMapper.deleteById(id) >=1;
+    }
+
+    @Override
+    public boolean resetPassword(Integer id) {
+        String password =passwordEncoder.encode("888888");
+        return  teacherMapper.resetPassword(password,id);
+    }
+
+    @Override
+    public boolean addTeacher(Teacher teacher) {
+        return teacherMapper.insert(teacher)>=1;
     }
 
     @Override
