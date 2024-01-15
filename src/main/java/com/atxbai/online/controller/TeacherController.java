@@ -4,15 +4,22 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 
 
-import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author 小白
@@ -61,21 +68,19 @@ public class TeacherController {
         return teacherService.lookStudentResume(lookStudentResumeReqVO);
     }
 
-    @GetMapping("/selectByInfo")
-    @ApiOperation(value = "获取教师个人信息")
-    public Response selectByInfo(@RequestHeader("Authorization") String header){
-        return teacherService.selectByInfo(header);
+    @ApiOperation("上传Excel导入教师")
+    @PostMapping("/excel/upload")
+    public Response upload(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
+            teacherService.upload(file.getInputStream());
+        return Response.success();
     }
 
-    @PostMapping("/editMessage")
-    @ApiOperation(value = "保存修改信息")
-    public Response editMessage(@RequestBody @Validated EditMessageRspVO editMessageRspVO){
-        return teacherService.editMessage(editMessageRspVO);
+    @ApiOperation("下载 Excel 导出教师")
+    @GetMapping("/excel/download")
+    public Response download() {
+        //设置Response响应头，以实现Excel文件的下载和中文文件名的支持。
+        teacherService.export();
+        return Response.success();
     }
 
-    @PostMapping("/updatePassword")
-    @ApiOperation("修改教师的密码")
-    public Response updatePassword(@RequestHeader("Authorization") String header,@RequestBody EditPasswordVo editPasswordVo ){
-        return teacherService.updatePassword(header,editPasswordVo);
-    }
 }

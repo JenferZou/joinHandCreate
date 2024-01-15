@@ -22,6 +22,7 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     UNAUTHORIZED("20001", "无访问权限，请先登录！"),
     FORBIDDEN("20002", "权限不足！"),
     CODE_600("600","请求参数错误"),
+    EXCEL_HEAD_INCORRECT("800","excel表头不正确"),
     ;
 
     // 异常码

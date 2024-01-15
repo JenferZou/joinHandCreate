@@ -7,6 +7,7 @@ import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -92,4 +93,8 @@ public interface TeacherService {
     Response editMessage(EditMessageRspVO editMessageRspVO);
 
     Response updatePassword(String header, EditPasswordVo editPasswordVo);
+
+    void upload(InputStream inputStream);
+
+    void export() ;
 }

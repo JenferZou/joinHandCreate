@@ -1,9 +1,17 @@
 package com.atxbai.online.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.metadata.data.ReadCellData;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.util.ListUtils;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.config.security.PasswordEncoderConfig;
+import com.atxbai.online.exception.BizException;
 import com.atxbai.online.mapper.*;
 import com.atxbai.online.model.pojo.*;
 import com.atxbai.online.model.vo.EditPasswordVo;
@@ -14,6 +22,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +31,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.atxbai.online.common.constants.Constant.BATCH_COUNT;
 
 /**
  * @author 小白
@@ -36,6 +48,7 @@ import java.util.stream.Collectors;
  * @content:
  */
 @Service
+@Slf4j
 public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
@@ -295,5 +308,86 @@ public class TeacherServiceImpl implements TeacherService {
             return Response.success("修改成功!");
         }
         return Response.fail("原密码不正确!");
+    }
+
+    @Override
+    public void upload(InputStream inputStream) {
+        //匿名内部类方法 不用额外写一个DemoDataListener
+        EasyExcelFactory.read(inputStream, ExcelUploadVo.class, new ReadListener<ExcelUploadVo>() {
+            //临时存储
+            //每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
+            private List<ExcelUploadVo> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
+            @Override
+            public void invokeHead(Map<Integer, ReadCellData<?>> headMap, AnalysisContext context) {
+                if (!headMap.containsKey(0) || !headMap.containsKey(1) || !headMap.containsKey(2) || !headMap.containsKey(3)
+                        || !headMap.get(0).equals("姓名") || !headMap.get(1).equals("专业")
+                        || !headMap.get(2).equals("电话") || !headMap.get(3).equals("所属部门") ) {
+                    // 这里给data加1条空数据，是因为doAfterAllAnalysed方法最后有判是否是空列表
+                    cachedDataList.add(new ExcelUploadVo());
+                    throw new BizException(ResponseCodeEnum.EXCEL_HEAD_INCORRECT);
+                }
+                // 这里给data加1条空数据，是因为doAfterAllAnalysed方法最后有判是否是空列表
+
+            }
+
+            //用于处理Excel中一行解析形成的POJO对象，解析过程由EasyExcel根据POJO字段上的注解自动完成。
+            @Override
+            public void invoke(ExcelUploadVo excelUploadVo, AnalysisContext context) {
+                cachedDataList.add(excelUploadVo);
+                // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    saveData();
+                    // 存储完成清理 list
+                    cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+                }
+            }
+
+            /**
+             * 所有数据解析完成了 都会来调用
+             *
+             * @param context
+             */
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+                // 这里也要保存数据，确保最后遗留的数据也存储到数据库
+                saveData();
+                log.info("所有数据解析完成！");
+            }
+
+            /**
+             * 加上存储数据库
+             */
+            private void saveData() {
+                log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+                for (ExcelUploadVo excelUploadVo : cachedDataList) {
+                    Teacher teacher = new Teacher();
+                    BeanUtils.copyProperties(excelUploadVo,teacher);
+                    teacher.setPassword("$2a$10$pSYaCr4ItzTJasjwI2N6Hu0bPh5VOlZCqScR6tzmDVMF6oe3ftN5u");
+                    teacherMapper.insert(teacher);
+                }
+                log.info("存储数据库成功！");
+            }
+
+        }).sheet().doRead();
+
+    }
+
+    @Override
+    public void export() {
+        List<Teacher> list = teacherMapper.selectList(null);
+        //获取桌面路径
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        File com=fsv.getHomeDirectory();
+        SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+        sdf.applyPattern("yyyyMMdd HHmmss");
+        Date date = new Date();// 获取当前时间
+        //编写输出路径，固定输出到桌面
+        String fileName = com.getPath()+"/老师数据导出列表" + sdf.format(date)+".xlsx";
+        //输出
+        EasyExcel.write(fileName, ExcelDownloadVo.class)
+                .autoCloseStream(Boolean.FALSE)
+                .sheet("导出列表")
+                .doWrite(list);
     }
 }
