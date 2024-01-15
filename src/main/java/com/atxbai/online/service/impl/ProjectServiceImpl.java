@@ -3,16 +3,16 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.mapper.ProjectMapper;
-import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.vo.ProjectPageReqVo;
 import com.atxbai.online.model.vo.ProjectReqVo;
-import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
     @Resource
     private ProjectMapper projectMapper;
@@ -93,18 +92,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     /**
      * 新增项目
+     *
      * @param projectReqVo
      */
     @Override
-    public void saveProject(ProjectReqVo projectReqVo,String header) {
+    public void saveProject(ProjectReqVo projectReqVo, String header) {
         Project project = new Project();
 
         //对象属性拷贝
         BeanUtils.copyProperties(projectReqVo, project);
-        // 过滤文本
-        String content = project.getContent();
-        String filterContent = HtmlFilterHelper.getContent(content);
-        project.setContent(filterContent);
 
         // 解析 token
         String token = StringUtils.substring(header, 7);
@@ -117,13 +113,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     /**
      * 项目分页
+     *
      * @param pageReqVo
      * @return
      */
     @Override
-    public IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo,String header) {
+    public IPage<Project> pageQueryProject(ProjectPageReqVo pageReqVo, String header) {
         //分页参数
-        Page<Project> projectPage = new Page<>(pageReqVo.getPage(),pageReqVo.getPageSize());
+        Page<Project> projectPage = new Page<>(pageReqVo.getPage(), pageReqVo.getPageSize());
 
         // 解析 token
         String token = StringUtils.substring(header, 7);
@@ -131,30 +128,35 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         //只查询当前登录老师的项目
-        queryWrapper.eq(Project::getTno,tno);
-
+        queryWrapper.eq(Project::getTno, tno);
 
         //条件查询
-        if(pageReqVo.getName()!=null && !pageReqVo.getName().isEmpty()){
-            queryWrapper.like(Project::getName,pageReqVo.getName());
+        if (pageReqVo.getName() != null && !pageReqVo.getName().isEmpty()) {
+            queryWrapper.like(Project::getName, pageReqVo.getName());
         }
-        if(pageReqVo.getStartTime()!=null){
+        if (pageReqVo.getStartTime() != null) {
             //大于等于
-            queryWrapper.ge(Project::getStartTime,pageReqVo.getStartTime());
+            queryWrapper.ge(Project::getStartTime, pageReqVo.getStartTime());
         }
-        if(pageReqVo.getNeedMajor()!=null && !pageReqVo.getNeedMajor().isEmpty()){
-            queryWrapper.like(Project::getNeedMajor,pageReqVo.getNeedMajor());
+        if (pageReqVo.getNeedMajor() != null && !pageReqVo.getNeedMajor().isEmpty()) {
+            queryWrapper.like(Project::getNeedMajor, pageReqVo.getNeedMajor());
         }
-        if(pageReqVo.getExpectedCompetition()!=null && !pageReqVo.getExpectedCompetition().isEmpty()){
-            queryWrapper.like(Project::getExpectedCompetition,pageReqVo.getExpectedCompetition());
+        if (pageReqVo.getExpectedCompetition() != null && !pageReqVo.getExpectedCompetition().isEmpty()) {
+            queryWrapper.like(Project::getExpectedCompetition, pageReqVo.getExpectedCompetition());
         }
-
-
         IPage<Project> projectIPage = projectMapper.selectPage(projectPage, queryWrapper);
+        List<Project> records = projectPage.getRecords();
+        if (Objects.nonNull(records)){
+            records = records.stream().map(project -> {
+                String content = HtmlFilterHelper.getContent(project.getContent());
+                project.setContent(content);
+                return project;
+            }).collect(Collectors.toList());
+        }
+        projectPage.setRecords(records);
+        log.warn("数据:{}",records);
         return projectIPage;
     }
-
-
 
 
     @Override
@@ -162,11 +164,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Project project = new Project();
         //对象属性拷贝
         BeanUtils.copyProperties(projectReqVo, project);
-        // 过滤文本
-        String content = project.getContent();
-        String filterContent = HtmlFilterHelper.getContent(content);
-        project.setContent(filterContent);
-
         projectMapper.updateById(project);
     }
 
