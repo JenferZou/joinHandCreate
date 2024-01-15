@@ -80,4 +80,13 @@ public interface TeacherService {
      * 获取学生的个人和学生简历信息
      */
     Response lookStudentResume(LookStudentResumeReqVO lookStudentResumeReqVO);
+
+    /**
+     * 获取教师个人信息接口
+     * @param header
+     * @return
+     */
+    Response selectByInfo(String header);
+
+    Response editMessage(EditMessageRspVO editMessageRspVO);
 }

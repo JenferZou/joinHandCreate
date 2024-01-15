@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -253,6 +254,24 @@ public class TeacherServiceImpl implements TeacherService {
         Resume resume = resumeMapper.selectOne(Wrappers.<Resume>lambdaQuery().eq(Resume::getSno, sno));
         LookStudentResumeRspVO build = LookStudentResumeRspVO.builder().studentInfo(student).resumeInfo(resume).build();
         return Response.success(build);
+    }
+
+    @Override
+    public Response selectByInfo(String header) {
+        // 解析 token
+        String token = StringUtils.substring(header, 7);
+        String tno = jwtTokenHelper.getUsernameByToken(token);
+        // 返回教师信息
+        Teacher teacher = teacherMapper.selectById(tno);
+        return Response.success(teacher);
+    }
+
+    @Override
+    public Response editMessage(EditMessageRspVO editMessageRspVO) {
+        Teacher teacher = new Teacher();
+        BeanUtils.copyProperties(editMessageRspVO,teacher);
+        teacherMapper.updateById(teacher);
+        return Response.success();
     }
 
 

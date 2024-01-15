@@ -60,4 +60,16 @@ public class TeacherController {
         return teacherService.lookStudentResume(lookStudentResumeReqVO);
     }
 
+    @GetMapping("/selectByInfo")
+    @ApiOperation(value = "获取教师个人信息")
+    public Response selectByInfo(@RequestHeader("Authorization") String header){
+        return teacherService.selectByInfo(header);
+    }
+
+    @PostMapping("/editMessage")
+    @ApiOperation(value = "保存修改信息")
+    public Response editMessage(@RequestBody @Validated EditMessageRspVO editMessageRspVO){
+        return teacherService.editMessage(editMessageRspVO);
+    }
+
 }
