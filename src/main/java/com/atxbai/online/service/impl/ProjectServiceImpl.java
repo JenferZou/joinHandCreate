@@ -1,6 +1,7 @@
 package com.atxbai.online.service.impl;
 
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
+import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.mapper.ProjectMapper;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.vo.ProjectPageReqVo;
@@ -100,10 +101,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //对象属性拷贝
         BeanUtils.copyProperties(projectReqVo, project);
+        // 过滤文本
+        String content = project.getContent();
+        String filterContent = HtmlFilterHelper.getContent(content);
+        project.setContent(filterContent);
 
         // 解析 token
         String token = StringUtils.substring(header, 7);
         Integer tno = Integer.valueOf(jwtTokenHelper.getUsernameByToken(token));
+        // 设置教师 tno
         project.setTno(tno);
 
         projectMapper.insert(project);
@@ -156,6 +162,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Project project = new Project();
         //对象属性拷贝
         BeanUtils.copyProperties(projectReqVo, project);
+        // 过滤文本
+        String content = project.getContent();
+        String filterContent = HtmlFilterHelper.getContent(content);
+        project.setContent(filterContent);
+
         projectMapper.updateById(project);
     }
 
