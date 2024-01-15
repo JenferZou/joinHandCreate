@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -77,6 +78,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         projects.forEach(pro->{
             Teacher teacher=teacherMapper.selectById(pro.getTno());
             Map<String, Object> m=new HashMap<>();
+            pro.setContent(HtmlFilterHelper.getContent(pro.getContent()));
             m.put("project",pro);
             m.put("tname",teacher.getName());
             projectsMap.add(m);
