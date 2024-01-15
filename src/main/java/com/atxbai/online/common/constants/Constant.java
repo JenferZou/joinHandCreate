@@ -1,4 +1,4 @@
-package com.atxbai.online.common;
+package com.atxbai.online.common.constants;
 
 public class Constant {
 

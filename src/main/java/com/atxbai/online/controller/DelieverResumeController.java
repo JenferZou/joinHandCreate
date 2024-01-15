@@ -1,9 +1,8 @@
 package com.atxbai.online.controller;
 
-import com.atxbai.online.common.Constant;
+import com.atxbai.online.common.constants.Constant;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Project;
@@ -19,11 +18,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.sf.jsqlparser.expression.operators.arithmetic.BitwiseXor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

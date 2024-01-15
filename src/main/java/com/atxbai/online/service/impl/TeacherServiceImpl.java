@@ -51,6 +51,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
+
     /**
      * 查询全部申请
      *
