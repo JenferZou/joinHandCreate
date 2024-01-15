@@ -3,8 +3,10 @@ package com.atxbai.online.service.impl;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
+import com.atxbai.online.config.security.PasswordEncoderConfig;
 import com.atxbai.online.mapper.*;
 import com.atxbai.online.model.pojo.*;
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -52,9 +55,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
     /**
      * 查询全部申请
@@ -274,5 +277,23 @@ public class TeacherServiceImpl implements TeacherService {
         return Response.success();
     }
 
-
+    @Override
+    public Response updatePassword(String header, EditPasswordVo editPasswordVo) {
+        // 解析 token
+        String token = StringUtils.substring(header, 7);
+        String tno = jwtTokenHelper.getUsernameByToken(token);
+        // 获取传递的密码
+        String oldPassword = editPasswordVo.getOldPassword();
+        // 查询用户的密码
+        Teacher teacher = teacherMapper.selectById(tno);
+        if (passwordEncoder.matches(oldPassword,teacher.getPassword())){
+            // 修改密码
+            String newPassword = editPasswordVo.getNewPassword();
+            newPassword = passwordEncoder.encode(newPassword);
+            teacher.setPassword(newPassword);
+            teacherMapper.updateById(teacher);
+            return Response.success("修改成功!");
+        }
+        return Response.fail("原密码不正确!");
+    }
 }

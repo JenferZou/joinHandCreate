@@ -3,6 +3,7 @@ package com.atxbai.online.service;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Teacher;
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -89,4 +90,6 @@ public interface TeacherService {
     Response selectByInfo(String header);
 
     Response editMessage(EditMessageRspVO editMessageRspVO);
+
+    Response updatePassword(String header, EditPasswordVo editPasswordVo);
 }

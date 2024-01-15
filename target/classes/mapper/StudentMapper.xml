@@ -6,7 +6,13 @@
     <sql id="Base_Column_List">
         resumeId,sno,personalAdvantage,internshipExperience,awardExperience,projectExperience,certificate
     </sql>
-
+    <insert id="saveBatch">
+        INSERT INTO student(sName, sMajor, sPhone, className, sDepartment, sno, gender,) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.sName},#{item.sMajor},#{item.sPhone},#{item.className},
+             #{item.sDepartment},#{item.sno},#{item.gender},)
+        </foreach>
+    </insert>
     <insert id="add" parameterType="com.atxbai.online.model.pojo.Resume" useGeneratedKeys="true">
         insert into resume
         <trim prefix="(" suffix=")" suffixOverrides=",">

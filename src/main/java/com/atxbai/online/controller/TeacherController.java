@@ -4,6 +4,7 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 
 
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import io.swagger.annotations.Api;
@@ -72,4 +73,9 @@ public class TeacherController {
         return teacherService.editMessage(editMessageRspVO);
     }
 
+    @PostMapping("/updatePassword")
+    @ApiOperation("修改教师的密码")
+    public Response updatePassword(@RequestHeader("Authorization") String header,@RequestBody EditPasswordVo editPasswordVo ){
+        return teacherService.updatePassword(header,editPasswordVo);
+    }
 }

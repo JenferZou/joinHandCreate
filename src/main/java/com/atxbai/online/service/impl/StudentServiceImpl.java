@@ -1,16 +1,20 @@
 package com.atxbai.online.service.impl;
 
+import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.ResumeMapper;
 import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.service.StudentService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.models.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +38,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ResumeMapper resumeMapper;
+
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
 
     @Override
     public Map<String, Object> listStudent(int page, int limit) {
@@ -137,6 +145,24 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             }
         }
         return i;
+    }
+
+    @Override
+    public Response editpass(String userToken, EditPasswordVo editPasswordVo) {
+        String token = StringUtils.substring(userToken, 7);
+        String sno = jwtTokenHelper.getUsernameByToken(token);
+        Student student = studentMapper.selectOne(Wrappers.<Student>lambdaQuery().eq(Student::getSno,sno));
+        if(student==null){
+            return Response.fail("用户不存在");
+        }
+        String oldPassword = editPasswordVo.getOldPassword();
+        if(!passwordEncoder.matches(oldPassword,student.getPassword())){
+            return Response.fail("原密码输入错误,修改密码失败");
+        }
+        //设置新密码
+        student.setPassword(passwordEncoder.encode(editPasswordVo.getNewPassword()));
+        studentMapper.updateById(student);
+        return Response.success("修改密码成功");
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.atxbai.online.controller;
 
-import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
-import com.atxbai.online.config.security.PasswordEncoderConfig;
-import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.vo.EditPasswordVo;
@@ -14,14 +11,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.el.parser.Token;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author 小白
@@ -44,9 +39,6 @@ public class StudentController {
 
     @Resource
     private ResumeService resumeService;
-
-    @Autowired
-    private PasswordEncoderConfig passwordEncoderConfig;
 
     @PostMapping("/add")
     @ApiOperation(value = "增加简历")
@@ -102,22 +94,7 @@ public class StudentController {
     @PostMapping("/editpass")
     @ApiOperation(value = "修改密码")
     public Response editpass(@RequestHeader("Authorization") String userToken,@RequestBody EditPasswordVo editPasswordVo ){
-        String token = StringUtils.substring(userToken, 7);
-        String sno = jwtTokenHelper.getUsernameByToken(token);
-        Student student = studentService.selectBySno(sno);
-        if(student==null){
-            return Response.fail("用户不存在");
-        }
-        //服务器传过来的旧密码加密后与数据库的旧密码进行匹配
-        String oldPasswordDb = student.getPassword();
-        String oldPass = passwordEncoderConfig.passwordEncoder().encode(editPasswordVo.getOldPassword());
-        if(!passwordEncoderConfig.passwordEncoder().matches(oldPass,oldPasswordDb)){
-            return Response.fail("原密码输入错误,修改密码失败");
-        }
-        //设置新密码
-        student.setPassword(passwordEncoderConfig.passwordEncoder().encode(editPasswordVo.getNewPassword()));
-        studentService.updateStudent(student);
-        return Response.success("修改密码成功");
+       return studentService.editpass(userToken,editPasswordVo);
     }
 
 

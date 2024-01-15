@@ -1,8 +1,10 @@
 package com.atxbai.online.service;
 
 
+import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -77,4 +79,6 @@ public interface StudentService extends IService<Student> {
      */
 
     int saveMore(List<Student> students);
+
+    Response editpass(String userToken, EditPasswordVo editPasswordVo);
 }
