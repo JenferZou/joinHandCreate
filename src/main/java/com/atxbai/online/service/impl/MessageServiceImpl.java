@@ -27,6 +27,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Override
     public Page<MessageVo> getMessageListDescBySno(Page<MessageVo> page, String sno) {
         Page<MessageVo> messagePageVo = this.baseMapper.selectMessageListBySno(page, sno);
+
         return messagePageVo;
 
     }

@@ -9,7 +9,6 @@
         SELECT
             m.mid,
             s.sName ,
-            m.createTime,
             s.sno ,
             m.createTime ,
             m.content ,
@@ -19,6 +18,7 @@
             message m
                 JOIN student s ON m.sno = s.sno
                 JOIN project p ON m.pid = p.id
+        order by m.createTime desc
 
     </select>
 </mapper>
