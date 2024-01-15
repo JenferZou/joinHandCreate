@@ -82,7 +82,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             projectsMap.add(m);
         });
         Map<String, Object> map = new HashMap<>();
-        map.put("projects", projects);
+        map.put("projects", projectsMap);
         map.put("total", projectIPage.getTotal());
         map.put("size", projectIPage.getSize());
         map.put("page", projectIPage.getPages());
