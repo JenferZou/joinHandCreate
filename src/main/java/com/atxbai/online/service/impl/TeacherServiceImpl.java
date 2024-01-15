@@ -321,8 +321,8 @@ public class TeacherServiceImpl implements TeacherService {
             @Override
             public void invokeHead(Map<Integer, ReadCellData<?>> headMap, AnalysisContext context) {
                 if (!headMap.containsKey(0) || !headMap.containsKey(1) || !headMap.containsKey(2) || !headMap.containsKey(3)
-                        || !headMap.get(0).equals("姓名") || !headMap.get(1).equals("专业")
-                        || !headMap.get(2).equals("电话") || !headMap.get(3).equals("所属部门") ) {
+                        || !headMap.get(0).getStringValue().equals("姓名") || !headMap.get(1).getStringValue().equals("专业")
+                        || !headMap.get(2).getStringValue().equals("电话") || !headMap.get(3).getStringValue().equals("所属部门") ) {
                     // 这里给data加1条空数据，是因为doAfterAllAnalysed方法最后有判是否是空列表
                     cachedDataList.add(new ExcelUploadVo());
                     throw new BizException(ResponseCodeEnum.EXCEL_HEAD_INCORRECT);
