@@ -2,14 +2,18 @@ package com.atxbai.online;
 
 
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
+import com.atxbai.online.mapper.LoginMapper;
 import com.atxbai.online.mapper.ManagerMapper;
 import com.atxbai.online.mapper.StudentMapper;
 import com.atxbai.online.mapper.TeacherMapper;
+import com.atxbai.online.model.pojo.Login;
 import com.atxbai.online.model.pojo.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootTest
@@ -27,6 +31,9 @@ class OnlineExamSpringboot3ApplicationTests {
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
+    @Autowired
+    private LoginMapper loginMapper;
+
     @Test
     public void testConnection() {
         List<Student> students = studentMapper.selectList(null);
@@ -40,8 +47,9 @@ class OnlineExamSpringboot3ApplicationTests {
 
     @Test
     public void testStudent() {
-        Student byUsername = studentMapper.findByUsername("100001");
-        System.out.println(byUsername);
+        Login login = new Login("1", "1", LocalDate.now());
+        int insert = loginMapper.insert(login);
+        System.out.println(insert);
 
     }
 

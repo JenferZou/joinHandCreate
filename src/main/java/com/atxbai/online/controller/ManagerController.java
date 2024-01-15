@@ -32,7 +32,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 @Api(tags = "管理员模块")
 public class ManagerController {
     @Autowired
@@ -44,11 +44,18 @@ public class ManagerController {
     @Autowired
     private TeacherService teacherService;
 
-/*    @PostMapping("/test/save")
-    @ApiOperation(value = "测试接口")
-    public Response test(@RequestBody @Validated com.atxbai.online.model.vo.TestSaveReqVO testSaveReqVO) {
-        return Response.success(testSaveReqVO);
-    }*/
+
+    @GetMapping("/dauList")
+    @ApiOperation(value = "获取日活信息")
+    public Response dauList(){
+        return managerService.dauList();
+    }
+
+    @GetMapping("/STFInfo")
+    @ApiOperation(value = "获取师生比信息")
+    public Response stfList(){
+        return managerService.stfList();
+    }
 
     @GetMapping("/listStudent")
     @ApiOperation(value = "获取学生列表")

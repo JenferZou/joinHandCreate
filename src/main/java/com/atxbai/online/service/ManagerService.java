@@ -1,5 +1,7 @@
 package com.atxbai.online.service;
 
+import com.atxbai.online.common.responseUtils.Response;
+
 import java.util.Map;
 
 public interface ManagerService {
@@ -17,4 +19,8 @@ public interface ManagerService {
      * @return
      */
    public boolean deleteManager(Integer id);
+
+    Response dauList();
+
+    Response stfList();
 }
