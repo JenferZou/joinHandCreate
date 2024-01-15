@@ -47,13 +47,13 @@ public class ManagerController {
 
     @GetMapping("/dauList")
     @ApiOperation(value = "获取日活信息")
-    public Response dauList(){
+    public Response dauList() {
         return managerService.dauList();
     }
 
     @GetMapping("/STFInfo")
     @ApiOperation(value = "获取师生比信息")
-    public Response stfList(){
+    public Response stfList() {
         return managerService.stfList();
     }
 
@@ -124,6 +124,7 @@ public class ManagerController {
         data.setErrorCode("200");
         return data;
     }
+
     @PostMapping("/student/changePassword")
     @ApiOperation(value = "修改密码")
     public Object changePassword(@RequestBody Integer id) {
@@ -143,21 +144,23 @@ public class ManagerController {
 
         return null;
     }
+
     @GetMapping("/project/list")
     @ApiOperation(value = "获取项目列表")
-    public Response projectList(int page,int limit,String keyword) {
+    public Response projectList(int page, int limit, String keyword) {
         if (page < 0 || limit < 0) {
             return Response.fail("参数错误");
         }
         Response<Map<String, Object>> data = new Response<>();
-        Map<String, Object> d =projectService.listProject(page, limit, keyword);
+        Map<String, Object> d = projectService.listProject(page, limit, keyword);
         data.setData(d);
         data.setErrorCode("200");
         return data;
     }
+
     @PostMapping("/project/modify")
     @ApiOperation(value = "修改项目信息")
-    public Object projectModify(@RequestBody  Project project) {
+    public Object projectModify(@RequestBody Project project) {
         if (projectService.updateProject(project)) {
             Response<String> data = new Response<>();
             data.setErrorCode("200");
@@ -167,6 +170,7 @@ public class ManagerController {
             return Response.fail("修改失败");
         }
     }
+
     @PostMapping("/project/delete")
     @ApiOperation(value = "删除项目信息")
     public Object projectDelete(@RequestBody Integer id) {
@@ -179,6 +183,7 @@ public class ManagerController {
             return Response.fail("删除失败");
         }
     }
+
     @PostMapping("/project/multidelete")
     @ApiOperation(value = "批量删除项目信息")
     public Object projectDelete(@RequestBody Integer[] ids) {
@@ -191,18 +196,33 @@ public class ManagerController {
             return Response.fail("删除失败");
         }
     }
+
+    @GetMapping("/project/get/{id}")
+    @ApiOperation(value = "获取项目信息")
+    public Object projectGet(@PathVariable Integer id) {
+        Project project = projectService.getById(id);
+        if (project == null) {
+            return Response.fail("项目不存在");
+        }
+        Response<Project> data = new Response<>();
+        data.setData(project);
+        data.setErrorCode("200");
+        return data;
+    }
+
     @GetMapping("/manager/list")
     @ApiOperation(value = "获取管理员信息")
-    public Object managerGet(int page,int limit,String keyword, @RequestHeader("Authorization") String header) {
+    public Object managerGet(int page, int limit, String keyword, @RequestHeader("Authorization") String header) {
         if (page < 0 || limit < 0) {
             return Response.fail("参数错误");
         }
         Response<Map<String, Object>> data = new Response<>();
-        Map<String, Object> d =managerService.listManager(page, limit, keyword,header);
+        Map<String, Object> d = managerService.listManager(page, limit, keyword, header);
         data.setData(d);
         data.setErrorCode("200");
         return data;
     }
+
     @PostMapping("/manager/delete")
     @ApiOperation(value = "删除管理员信息")
     public Object managerDelete(@RequestBody Integer id) {
@@ -215,27 +235,30 @@ public class ManagerController {
             return Response.fail("删除失败");
         }
     }
+
     @GetMapping("/teacher/list")
     @ApiOperation(value = "获取教师信息")
-    public Object teacherGet(int page,int limit,String keyword) {
+    public Object teacherGet(int page, int limit, String keyword) {
         if (page < 0 || limit < 0) {
             return Response.fail("参数错误");
         }
         Response<Map<String, Object>> data = new Response<>();
-        Map<String, Object> d =teacherService.listTeacher(page, limit, keyword);
+        Map<String, Object> d = teacherService.listTeacher(page, limit, keyword);
         data.setData(d);
         data.setErrorCode("200");
         return data;
     }
+
     @GetMapping("/teacher/preedit/{no}")
     @ApiOperation(value = "获取单个教师信息")
-    public Object teacherPreedit(@PathVariable(value="no")Integer no) {
+    public Object teacherPreedit(@PathVariable(value = "no") Integer no) {
         Response<Teacher> data = new Response<>();
-        Teacher t =teacherService.getTeacherByNo(no);
+        Teacher t = teacherService.getTeacherByNo(no);
         data.setData(t);
         data.setErrorCode("200");
         return data;
     }
+
     @PostMapping("/teacher/modify")
     @ApiOperation(value = "修改教师信息")
     public Object teacherModify(@RequestBody Teacher teacher) {
@@ -248,6 +271,7 @@ public class ManagerController {
             return Response.fail("修改失败");
         }
     }
+
     @PostMapping("/teacher/delete")
     @ApiOperation(value = "删除教师信息")
     public Object teacherDelete(@RequestBody Integer id) {
@@ -260,6 +284,7 @@ public class ManagerController {
             return Response.fail("删除失败");
         }
     }
+
     @PostMapping("/teacher/add")
     @ApiOperation(value = "添加教师信息")
     public Object teacherAdd(@RequestBody Teacher teacher) {
@@ -272,6 +297,7 @@ public class ManagerController {
             return Response.fail("添加失败");
         }
     }
+
     @PostMapping("/teacher/resetPassword")
     @ApiOperation(value = "重置教师密码")
     public Object teacherResetPassword(@RequestBody Integer no) {
@@ -284,19 +310,21 @@ public class ManagerController {
             return Response.fail("重置失败");
         }
     }
+
     @GetMapping("/preview/resume/{sno}")
     @ApiOperation(value = "预览简历及学生信息")
     public Object previewResume(@PathVariable("sno") String sno) {
         Response<Map<String, Object>> data = new Response<>();
-       Map<String, Object> studentAndResume = studentService.findStudentAndResume(sno);
-       data.setData(studentAndResume);
-       data.setErrorCode("200");
+        Map<String, Object> studentAndResume = studentService.findStudentAndResume(sno);
+        data.setData(studentAndResume);
+        data.setErrorCode("200");
         return data;
     }
+
     @PostMapping("/resume/update")
     @ApiOperation(value = "更新简历")
     public Object resumeUpdate(@RequestBody Resume resume) {
-        if (resume.getResumeId()!=null&&resumeService.updateById(resume)) {
+        if (resume.getResumeId() != null && resumeService.updateById(resume)) {
             Response<String> data = new Response<>();
             data.setErrorCode("200");
             data.setMessage("更新成功");
