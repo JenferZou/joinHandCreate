@@ -42,7 +42,7 @@ public class ProjectController {
 
         Page<Project> projectPage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
         LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        projectLambdaQueryWrapper.orderByDesc(Project::getId);
+        projectLambdaQueryWrapper.orderByDesc(Project::getStartTime);
         IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
         return PageResponse.success(page, page.getRecords());
     }
