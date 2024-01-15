@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * @author 小白
  * @version 1.0
@@ -46,4 +48,6 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Select("SELECT * from student where sno = #{sno}")
     Student selectBySno(String sno);
+
+    int saveBatch(List<Student> students);
 }

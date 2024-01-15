@@ -1,6 +1,8 @@
 package com.atxbai.online.controller;
 
 import com.atxbai.online.common.copyUtils.CopyTools;
+import com.atxbai.online.common.excel.ExcelHandle;
+import com.atxbai.online.common.excel.ExportExcelUtils;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.pojo.Resume;
@@ -17,8 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -331,6 +339,58 @@ public class ManagerController {
             return data;
         } else {
             return Response.fail("更新失败");
+        }
+    }
+    @GetMapping(value = "/excel/exportBankCheckInfo")
+    public void ExportBankCkeckInfo(HttpServletResponse response, HttpServletRequest request){
+        //这里是笔者实际业务需求中需要得到时间间隔。可忽略
+        //得到所有要导出的数据
+        List<Student> students =studentService.exportStudentExcel();
+        //定义导出的excel名字
+        String excelName = "学生表";
+        //获取需要转出的excel表头的map字段
+        LinkedHashMap<String, String> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("id","编号");
+        fieldMap.put("sName","姓名");
+        fieldMap.put("sno","学号");
+        fieldMap.put("gender","性别");
+        fieldMap.put("sMajor","专业");
+        fieldMap.put("className","班级");
+        fieldMap.put("sDepartment","所属学院");
+        fieldMap.put("sPhone","电话");
+        //fieldMap.put("简历","resumeId");
+        //导出用户相关信息
+        new ExportExcelUtils();
+        ExportExcelUtils.export(excelName,students,fieldMap,response);
+    }
+    @PostMapping("/excel/leadExcel")
+    public Object leadExcel(@RequestBody MultipartFile file)  {
+        int i=0;
+        if(file==null){
+            return Response.fail("文件为空");
+        }
+        try {
+            InputStream inputStream=file.getInputStream();
+            LinkedHashMap<String, String> fieldMap = new LinkedHashMap<>();
+            fieldMap.put("姓名","SName");
+            fieldMap.put("学号","sno");
+            fieldMap.put("性别","gender");
+            fieldMap.put("专业","SMajor");
+            fieldMap.put("班级","className");
+            fieldMap.put("所属学院","SDepartment");
+            fieldMap.put("电话","SPhone");
+            List<Student>students=new ExcelHandle().handlerData(inputStream,fieldMap,Student.class);
+            i=studentService.saveMore(students);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if(i>0) {
+            Response<String> data=new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("上传成功");
+            return data;
+        } else {
+            return Response.fail("上传失败");
         }
     }
 }

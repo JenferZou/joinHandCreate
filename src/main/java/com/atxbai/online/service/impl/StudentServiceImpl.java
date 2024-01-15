@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author 小白
@@ -119,6 +120,23 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public Student selectBySno(String sno) {
         Student student = studentMapper.selectBySno(sno);
         return student;
+    }
+
+    @Override
+    public List<Student> exportStudentExcel() {
+        return studentMapper.selectList(null);
+    }
+
+    @Override
+    public int saveMore(List<Student> students) {
+        int i=0;
+        for(Student student:students){
+            if(!Objects.nonNull(studentMapper.selectBySno(student.getSno()))) {
+                student.setPassword(passwordEncoder.encode("123456"));
+                i += studentMapper.insert(student);
+            }
+        }
+        return i;
     }
 
     @Override

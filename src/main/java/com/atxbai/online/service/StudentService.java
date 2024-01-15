@@ -6,6 +6,7 @@ import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,4 +67,14 @@ public interface StudentService extends IService<Student> {
    public Map<String, Object> findStudentAndResume(String sno);
 
     Student selectBySno(String sno);
+
+    List<Student> exportStudentExcel();
+
+    /**
+     * 保存学生集合
+     * @param students 学生
+     * @return
+     */
+
+    int saveMore(List<Student> students);
 }
