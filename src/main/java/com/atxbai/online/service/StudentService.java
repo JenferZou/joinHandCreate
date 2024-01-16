@@ -42,7 +42,7 @@ public interface StudentService extends IService<Student> {
      * @param student 学生信息
      * @return
      */
-  public   boolean addStudent(Student student);
+  public   Response addStudent(Student student);
 
   public   boolean deleteStudent(Integer id);
 

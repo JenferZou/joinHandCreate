@@ -4,10 +4,7 @@ import com.atxbai.online.common.copyUtils.CopyTools;
 import com.atxbai.online.common.excel.ExcelHandle;
 import com.atxbai.online.common.excel.ExportExcelUtils;
 import com.atxbai.online.common.responseUtils.Response;
-import com.atxbai.online.model.pojo.Project;
-import com.atxbai.online.model.pojo.Resume;
-import com.atxbai.online.model.pojo.Student;
-import com.atxbai.online.model.pojo.Teacher;
+import com.atxbai.online.model.pojo.*;
 import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
@@ -97,14 +94,7 @@ public class ManagerController {
     @ApiOperation(value = "添加学生信息")
     public Response add(@RequestBody @Validated StudentVO studentVO) {
         Student student = CopyTools.copy(studentVO, Student.class);
-        if (studentService.addStudent(student)) {
-            Response<String> data = new Response();
-            data.setErrorCode("200");
-            data.setMessage("添加成功");
-            return data;
-        } else {
-            return Response.fail("添加失败");
-        }
+        return studentService.addStudent(student);
     }
 
     @PostMapping("/delete")
@@ -245,6 +235,19 @@ public class ManagerController {
         }
     }
 
+    @PostMapping("/manager/update")
+    @ApiOperation(value = "修改管理员信息")
+    public Object managerUpdate(@RequestBody Manager manager) {
+        if (managerService.updateManager(manager)) {
+            Response<String> data = new Response<>();
+            data.setErrorCode("200");
+            data.setMessage("修改成功");
+            return data;
+        } else {
+            return Response.fail("修改失败");
+        }
+    }
+
     @GetMapping("/teacher/list")
     @ApiOperation(value = "获取教师信息")
     public Object teacherGet(int page, int limit, String keyword) {
@@ -342,50 +345,52 @@ public class ManagerController {
             return Response.fail("更新失败");
         }
     }
+
     @GetMapping(value = "/excel/exportBankCheckInfo")
-    public void ExportBankCkeckInfo(HttpServletResponse response, HttpServletRequest request){
+    public void ExportBankCkeckInfo(HttpServletResponse response, HttpServletRequest request) {
         //得到所有要导出的数据
-        List<Student> students =studentService.exportStudentExcel();
+        List<Student> students = studentService.exportStudentExcel();
         //定义导出的excel名字
         String excelName = "学生表";
         //获取需要转出的excel表头的map字段
         LinkedHashMap<String, String> fieldMap = new LinkedHashMap<>();
-        fieldMap.put("id","编号");
-        fieldMap.put("sName","姓名");
-        fieldMap.put("sno","学号");
-        fieldMap.put("gender","性别");
-        fieldMap.put("sMajor","专业");
-        fieldMap.put("className","班级");
-        fieldMap.put("sDepartment","所属学院");
-        fieldMap.put("sPhone","电话");
+        fieldMap.put("id", "编号");
+        fieldMap.put("sName", "姓名");
+        fieldMap.put("sno", "学号");
+        fieldMap.put("gender", "性别");
+        fieldMap.put("sMajor", "专业");
+        fieldMap.put("className", "班级");
+        fieldMap.put("sDepartment", "所属学院");
+        fieldMap.put("sPhone", "电话");
         //fieldMap.put("简历","resumeId");
         //导出用户相关信息
         new ExportExcelUtils();
-        ExportExcelUtils.export(excelName,students,fieldMap,response);
+        ExportExcelUtils.export(excelName, students, fieldMap, response);
     }
+
     @PostMapping("/excel/leadExcel")
-    public Object leadExcel(@RequestBody MultipartFile file)  {
-        int i=0;
-        if(file==null){
+    public Object leadExcel(@RequestBody MultipartFile file) {
+        int i = 0;
+        if (file == null) {
             return Response.fail("文件为空");
         }
         try {
-            InputStream inputStream=file.getInputStream();
+            InputStream inputStream = file.getInputStream();
             LinkedHashMap<String, String> fieldMap = new LinkedHashMap<>();
-            fieldMap.put("姓名","SName");
-            fieldMap.put("学号","sno");
-            fieldMap.put("性别","gender");
-            fieldMap.put("专业","SMajor");
-            fieldMap.put("班级","className");
-            fieldMap.put("所属学院","SDepartment");
-            fieldMap.put("电话","SPhone");
-            List<Student>students=new ExcelHandle().handlerData(inputStream,fieldMap,Student.class);
-            i=studentService.saveMore(students);
+            fieldMap.put("姓名", "SName");
+            fieldMap.put("学号", "sno");
+            fieldMap.put("性别", "gender");
+            fieldMap.put("专业", "SMajor");
+            fieldMap.put("班级", "className");
+            fieldMap.put("所属学院", "SDepartment");
+            fieldMap.put("电话", "SPhone");
+            List<Student> students = new ExcelHandle().handlerData(inputStream, fieldMap, Student.class);
+            i = studentService.saveMore(students);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        if(i>0) {
-            Response<String> data=new Response<>();
+        if (i > 0) {
+            Response<String> data = new Response<>();
             data.setErrorCode("200");
             data.setMessage("上传成功");
             return data;

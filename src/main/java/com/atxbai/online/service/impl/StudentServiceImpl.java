@@ -77,9 +77,23 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public boolean addStudent(Student student) {
+    public Response addStudent(Student student) {
+        Response<String> response = new Response();
+        QueryWrapper<Student> wrapper = new QueryWrapper<>();
+        wrapper.eq("sno", student.getSno());
+        Student s = studentMapper.selectOne(wrapper);
+       if(Objects.nonNull(s)){
+           return Response.fail("该学号已存在");
+       }
         student.setPassword(passwordEncoder.encode("123456"));
-        return studentMapper.insert(student) >= 1;
+       if(studentMapper.insert(student)>=1){
+           Response<String> data = new Response();
+           data.setErrorCode("200");
+           data.setMessage("添加成功");
+           return data;
+       }else{
+           return Response.fail("添加失败");
+       }
     }
 
     @Override

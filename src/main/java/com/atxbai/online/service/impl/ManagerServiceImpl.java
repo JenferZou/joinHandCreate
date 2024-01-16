@@ -97,4 +97,9 @@ public class ManagerServiceImpl implements ManagerService {
         // 返回
         return Response.success(STFRspVO.builder().studentNum(studentNum).teacherNum(teacherNum).build());
     }
+
+    @Override
+    public boolean updateManager(Manager manager) {
+        return managerMapper.updateById(manager)>0;
+    }
 }

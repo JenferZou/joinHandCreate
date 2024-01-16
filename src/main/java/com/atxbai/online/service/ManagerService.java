@@ -1,6 +1,7 @@
 package com.atxbai.online.service;
 
 import com.atxbai.online.common.responseUtils.Response;
+import com.atxbai.online.model.pojo.Manager;
 
 import java.util.Map;
 
@@ -23,4 +24,12 @@ public interface ManagerService {
     Response dauList();
 
     Response stfList();
+
+    /**
+     * 修改管理员
+     * @param manager
+     * @return
+     */
+
+    boolean updateManager(Manager manager);
 }
