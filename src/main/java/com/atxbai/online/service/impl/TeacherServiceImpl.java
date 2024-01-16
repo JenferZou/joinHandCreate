@@ -213,8 +213,17 @@ public class TeacherServiceImpl implements TeacherService {
         delieverResume.setMark(1);
         // 更新数据,同时设置更新条件
         int update = delieverResumeMapper.update(delieverResume, wrapper);
+        // 如果为 1 ，给消息表中添加数据，表示学生通过项目的进度
+        Message message = Message.builder()
+                .tno(Integer.parseInt(tno))
+                .sno(sno).pid(pid)
+                .createDateTime(LocalDateTime.now())
+                .content("学生" + delieverResume.getSName() + "被同意加入" + delieverResume.getProjectName() + "项目组!")
+                .build();
+        // 插入数据
+        int insert = messageMapper.insert(message);
         // 返回
-        return update == 1 ? Response.success() : Response.fail();
+        return insert == 1 ? Response.success() : Response.fail();
     }
 
     @Override

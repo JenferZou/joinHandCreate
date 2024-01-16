@@ -170,7 +170,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             }).collect(Collectors.toList());
         }
         projectPage.setRecords(records);
-        log.warn("数据:{}",records);
         return projectIPage;
     }
 

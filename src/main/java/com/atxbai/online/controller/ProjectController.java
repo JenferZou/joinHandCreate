@@ -93,7 +93,6 @@ public class ProjectController {
     @PostMapping("/saveProject")
     @ApiOperation("新增项目")
     public Response save(@RequestBody @Validated ProjectReqVo projectReqVo,@RequestHeader("Authorization") String header){
-        log.info("新增项目{}",projectReqVo);
         projectService.saveProject(projectReqVo,header);
         return Response.success("操作成功");
     }
@@ -106,7 +105,6 @@ public class ProjectController {
     @PostMapping
     @ApiOperation("项目的分页查询")
     public PageResponse<Project> page(@RequestBody ProjectPageReqVo pageReqVo,@RequestHeader("Authorization") String header){
-        log.info("传递进来的分页查询参数：{}",pageReqVo);
         IPage<Project> pageResult = projectService.pageQueryProject(pageReqVo, header);
         return PageResponse.success(pageResult,pageResult.getRecords());
     }
@@ -119,7 +117,6 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     @ApiOperation("根据id删除项目")
     public Response delete(@PathVariable Integer id){
-        log.info("根据id删除{}",id);
         projectService.deleteProject(id);
         return Response.success("操作成功");
     }
@@ -127,14 +124,12 @@ public class ProjectController {
     @GetMapping("/getById")
     @ApiOperation("根据id查找项目")
     public Response getById( int id){
-        log.info("根据id查找项目:{}",id);
         Project project = projectService.getById(id);
         return Response.success(project);
     }
     @PostMapping("/update")
     @ApiOperation("根据id修改项目")
     public Response update(@RequestBody @Validated ProjectReqVo projectReqVo){
-        log.info("根据id修改项目:{}",projectReqVo);
         projectService.update(projectReqVo);
         return Response.success();
     }
