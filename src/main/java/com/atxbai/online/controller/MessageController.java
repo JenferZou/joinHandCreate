@@ -18,12 +18,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/message")
 @Api(tags = "消息通知模块")
+@PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_STUDENT')")
 public class MessageController {
 
     @Autowired

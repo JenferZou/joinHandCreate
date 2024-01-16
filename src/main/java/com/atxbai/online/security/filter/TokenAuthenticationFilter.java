@@ -69,7 +69,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith("/admin") || requestURI.startsWith("/student") || requestURI.startsWith("/teacher")|| requestURI.startsWith("/project")|| requestURI.startsWith("/delieverResume")){
+        if (requestURI.startsWith("/admin") || requestURI.startsWith("/student") || requestURI.startsWith("/teacher")|| requestURI.startsWith("/project")|| requestURI.startsWith("/delieverResume") || requestURI.startsWith("/message")){
             // 从请求头中获取 key 为 Authorization 的值
             String header = request.getHeader(tokenHeaderKey);
             // 判断 value 值是否以 Bearer 开头
