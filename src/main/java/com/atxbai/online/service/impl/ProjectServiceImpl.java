@@ -110,9 +110,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public boolean deleteProject(Integer id) {
         Project project=projectMapper.selectById(id);
        int i=projectMapper.deleteById(id);
-       int j=0;
        if(i>0){
-          j=this.delieverResumeMapper.setMark(id,-100);
+          i+=this.delieverResumeMapper.setMark(id,-100);
        }
        Set<String> s=delieverResumeMapper.selectSno(id);
        s.forEach(v->{
@@ -124,7 +123,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
            // 插入数据
           messageMapper.insert(message);
        });
-        return j>0;
+        return i>0;
     }
 
     @Override
