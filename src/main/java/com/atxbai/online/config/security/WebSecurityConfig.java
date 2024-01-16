@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 // 配置需要认证的路径
                 .authorizeHttpRequests()
-                .mvcMatchers("/admin/**","/student/**","/teacher/**").authenticated()
+                .mvcMatchers("/admin/**","/student/**","/teacher/**","/project/**","/delieverResume/**").authenticated()
                 .anyRequest().permitAll()
             .and()
                 // 前后端分离，无需创建会话

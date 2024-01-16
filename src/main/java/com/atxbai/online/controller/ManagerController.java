@@ -38,7 +38,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @Api(tags = "管理员模块")
 public class ManagerController {
     @Autowired
