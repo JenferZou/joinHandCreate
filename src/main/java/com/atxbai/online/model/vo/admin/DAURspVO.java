@@ -1,5 +1,8 @@
 package com.atxbai.online.model.vo.admin;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +22,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel("日活响应体")
 public class DAURspVO {
     /**
      * 日期集合
      */
+    @ApiModelProperty("时间集合")
     private List<LocalDate> localDates = new ArrayList<>();
     /**
      * 人数集合
      */
+    @ApiModelProperty("每日人数")
     private List<Long> nums = new ArrayList<>();
 }
