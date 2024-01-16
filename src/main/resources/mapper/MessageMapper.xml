@@ -18,6 +18,7 @@
             message m
                 JOIN student s ON m.sno = s.sno
                 JOIN project p ON m.pid = p.id
+        where m.sno = #{sno}
         order by m.createTime desc
 
     </select>
