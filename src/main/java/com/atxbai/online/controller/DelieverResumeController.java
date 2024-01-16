@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -110,14 +111,7 @@ public class DelieverResumeController {
     @ApiOperation(value = "根据sno获取投递的简历")
     @GetMapping("/getdelieverResumeBysno")
     public PageResponse<DelieverResume> getdelieverResumeBysno(@RequestHeader("Authorization") String userToken,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
-        String token = StringUtils.substring(userToken, 7);
-        String sno = jwtTokenHelper.getUsernameByToken(token);
-        Page<DelieverResume> delieverResumePage = new Page<>(pageNo == null ? 1 : pageNo, pageSize == null ? 10 : pageSize);
-        LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno).orderByDesc(DelieverResume::getId);
-        IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
-        return PageResponse.success(page, page.getRecords());
-
+        return delieverResumeService.getdelieverResumeBysno(userToken,pageNo,pageSize);
     }
 
     @ApiOperation(value = "根据sno以及项目名称模糊查询获取投递的简历")
