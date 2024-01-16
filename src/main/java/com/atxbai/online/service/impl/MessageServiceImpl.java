@@ -1,19 +1,25 @@
 package com.atxbai.online.service.impl;
 
+import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.mapper.MessageMapper;
 import com.atxbai.online.model.pojo.Message;
 import com.atxbai.online.model.vo.MessageVo;
+import com.atxbai.online.model.vo.teacher.KickOutStudentReqVo;
 import com.atxbai.online.service.MessageService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * @author 小白
@@ -40,6 +46,17 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         addMessage.setContent(content);
         addMessage.setCreateDateTime(LocalDateTime.now());
         addMessage.setPid(pid);
+        this.save(addMessage);
+    }
+
+    @Override
+    public void saveMessageBySno(KickOutStudentReqVo kickOutStudentReqVo) {
+        Message addMessage = new Message();
+        BeanUtils.copyProperties(kickOutStudentReqVo,addMessage);
+        addMessage.setCreateDateTime(LocalDateTime.now());
+        String context="你已被"+kickOutStudentReqVo.getMentor()+"踢出"+kickOutStudentReqVo.getProjectName();
+        addMessage.setContent(context);
+        addMessage.setCreateDateTime(LocalDateTime.now());
         this.save(addMessage);
     }
 }

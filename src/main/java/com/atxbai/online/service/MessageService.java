@@ -1,10 +1,8 @@
 package com.atxbai.online.service;
 
-import com.atxbai.online.model.pojo.Message;
 import com.atxbai.online.model.vo.MessageVo;
+import com.atxbai.online.model.vo.teacher.KickOutStudentReqVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import java.util.List;
 
 /**
  * @author 小白
@@ -17,4 +15,5 @@ public interface MessageService {
 
     void deliverMessage(String sno, Integer tno,Integer pid,String content);
 
+    void saveMessageBySno(KickOutStudentReqVo kickOutStudentReqVo);
 }

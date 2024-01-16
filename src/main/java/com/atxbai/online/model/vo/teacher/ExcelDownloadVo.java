@@ -1,5 +1,6 @@
 package com.atxbai.online.model.vo.teacher;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExcelDownloadVo {
     @ExcelProperty("工号")
-    private String no;
+    private Integer no;
 
     @ExcelProperty("姓名")
     private String name;
@@ -28,6 +29,10 @@ public class ExcelDownloadVo {
 
     @ExcelProperty("所属部门")
     private String department;
+
+    @ExcelIgnore
+    private String password;
+
 
 
 }

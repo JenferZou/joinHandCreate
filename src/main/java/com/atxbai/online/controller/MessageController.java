@@ -9,6 +9,7 @@ import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Message;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.vo.MessageVo;
+import com.atxbai.online.model.vo.teacher.KickOutStudentReqVo;
 import com.atxbai.online.service.MessageService;
 import com.atxbai.online.service.StudentService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -50,6 +51,12 @@ public class MessageController {
         Page<MessageVo> page = messageService.getMessageListDescBySno(messagePage, sno);
         return PageResponse.success(page, page.getRecords());
 
+    }
+
+    @PostMapping("/saveMessageBySno")
+    private Response saveMessageBySno(@RequestBody KickOutStudentReqVo kickOutStudentReqVo){
+        messageService.saveMessageBySno(kickOutStudentReqVo);
+        return Response.success();
     }
 
 

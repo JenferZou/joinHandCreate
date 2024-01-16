@@ -79,7 +79,6 @@ public class TeacherController {
     @ApiOperation("下载 Excel 导出教师")
     @GetMapping("/excel/download")
     public Response download() {
-        //设置Response响应头，以实现Excel文件的下载和中文文件名的支持。
         teacherService.export();
         return Response.success();
     }
