@@ -5,12 +5,14 @@ import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.mapper.DelieverResumeMapper;
 import com.atxbai.online.model.pojo.DelieverResume;
+import com.atxbai.online.model.vo.UpdateResumeMarkReqVo;
 import com.atxbai.online.service.DelieverResumeService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DelieverResumeServiceImpl extends ServiceImpl<DelieverResumeMapper, DelieverResume> implements DelieverResumeService {
+
+    @Autowired
+    DelieverResumeMapper delieverResumeMapper;
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
@@ -38,5 +43,12 @@ public class DelieverResumeServiceImpl extends ServiceImpl<DelieverResumeMapper,
             return delieverResume;
         }).collect(Collectors.toList());
         return PageResponse.success(pageInfo, records);
+    }
+
+    @Override
+    public Integer updateMakrById(UpdateResumeMarkReqVo updateResumeMarkReqVo) {
+        DelieverResume delieverResume = new DelieverResume();
+        BeanUtils.copyProperties(updateResumeMarkReqVo,delieverResume);
+        return delieverResumeMapper.updateById(delieverResume);
     }
 }

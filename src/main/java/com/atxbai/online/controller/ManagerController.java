@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -391,5 +392,19 @@ public class ManagerController {
         } else {
             return Response.fail("上传失败");
         }
+    }
+
+    @ApiOperation("上传Excel导入教师")
+    @PostMapping("/excel/upload")
+    public Response upload(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
+        teacherService.upload(file.getInputStream());
+        return Response.success();
+    }
+
+    @ApiOperation("下载 Excel 导出教师")
+    @GetMapping("/excel/download")
+    public Response download() {
+        teacherService.export();
+        return Response.success();
     }
 }

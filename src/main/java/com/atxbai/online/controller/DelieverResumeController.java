@@ -8,6 +8,7 @@ import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.pojo.Resume;
 import com.atxbai.online.model.pojo.Student;
+import com.atxbai.online.model.vo.UpdateResumeMarkReqVo;
 import com.atxbai.online.service.DelieverResumeService;
 import com.atxbai.online.service.ProjectService;
 import com.atxbai.online.service.ResumeService;
@@ -142,6 +143,28 @@ public class DelieverResumeController {
         }
     }
 
+    @ApiOperation("根据pid修改Mark")
+    @PostMapping("/updateMarkById")
+    public Response updateMarkById(@RequestBody UpdateResumeMarkReqVo updateResumeMarkReqVo){
+        Integer update = delieverResumeService.updateMakrById(updateResumeMarkReqVo);
+        if(update == 1){
+            return Response.success();
+        }
+        else {
+            return Response.fail();
+        }
+    }
 
+    @ApiOperation(value = "根据pid和Mark获取投递的简历")
+    @GetMapping("/getdelieverResumeByPidAndMark")
+    public Response getdelieverResumeByPidAndMark(@RequestParam("pid") Integer pid,@RequestParam("mark") Integer mark){
+        LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        resumeLambdaQueryWrapper.eq(DelieverResume::getPid, pid);
+        resumeLambdaQueryWrapper.eq(DelieverResume::getMark, mark);
+        List<DelieverResume> resumeList = delieverResumeService.list(resumeLambdaQueryWrapper);
+        return Response.success(resumeList);
+
+
+    }
 
 }

@@ -114,12 +114,6 @@ public class ProjectController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
-    @ApiOperation("根据id删除项目")
-    public Response delete(@PathVariable Integer id){
-        projectService.deleteProject(id);
-        return Response.success("操作成功");
-    }
 
     @GetMapping("/getById")
     @ApiOperation("根据id查找项目")
