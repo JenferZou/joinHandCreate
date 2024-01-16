@@ -4,6 +4,7 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 
 
+import com.atxbai.online.model.vo.EditPasswordVo;
 import com.atxbai.online.model.vo.teacher.*;
 import com.atxbai.online.service.TeacherService;
 import io.swagger.annotations.Api;
@@ -81,6 +82,24 @@ public class TeacherController {
         //设置Response响应头，以实现Excel文件的下载和中文文件名的支持。
         teacherService.export();
         return Response.success();
+    }
+
+    @GetMapping("/selectByInfo")
+    @ApiOperation(value = "获取教师个人信息")
+    public Response selectByInfo(@RequestHeader("Authorization") String header){
+        return teacherService.selectByInfo(header);
+    }
+
+    @PostMapping("/editMessage")
+    @ApiOperation(value = "保存修改信息")
+    public Response editMessage(@RequestBody @Validated EditMessageRspVO editMessageRspVO){
+        return teacherService.editMessage(editMessageRspVO);
+    }
+
+    @PostMapping("/updatePassword")
+    @ApiOperation("修改教师的密码")
+    public Response updatePassword(@RequestHeader("Authorization") String header,@RequestBody EditPasswordVo editPasswordVo ){
+        return teacherService.updatePassword(header,editPasswordVo);
     }
 
 }
