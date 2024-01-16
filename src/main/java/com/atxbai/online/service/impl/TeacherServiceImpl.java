@@ -385,7 +385,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void export() {
-        List<Teacher> list = teacherMapper.selectList(null);
         //获取桌面路径
         FileSystemView fsv = FileSystemView.getFileSystemView();
         File com=fsv.getHomeDirectory();
@@ -396,8 +395,10 @@ public class TeacherServiceImpl implements TeacherService {
         String fileName = com.getPath()+"/老师数据导出列表" + sdf.format(date)+".xlsx";
         //输出
         EasyExcel.write(fileName, ExcelDownloadVo.class)
-                .autoCloseStream(Boolean.FALSE)
-                .sheet("导出列表")
-                .doWrite(list);
+                .sheet("模板")
+                .doWrite(() -> {
+                    // 分页查询数据
+                    return teacherMapper.selectList(null);
+                });
     }
 }
