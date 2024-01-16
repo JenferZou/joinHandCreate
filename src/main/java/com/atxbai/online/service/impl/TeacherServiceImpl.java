@@ -10,6 +10,7 @@ import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.responseUtils.ResponseCodeEnum;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
+import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.config.security.PasswordEncoderConfig;
 import com.atxbai.online.exception.BizException;
 import com.atxbai.online.mapper.*;
@@ -105,7 +106,7 @@ public class TeacherServiceImpl implements TeacherService {
                     .sName(rd.getSName())
                     .projectName(rd.getProjectName())
                     .smajor(rd.getSMajor())
-                    .content(rd.getContent())
+                    .content(HtmlFilterHelper.getContent(rd.getContent()))
                     .build()
             ).collect(Collectors.toList());
         }
