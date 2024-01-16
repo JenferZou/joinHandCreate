@@ -37,8 +37,8 @@ public class Knife4jConfig {
 
     private ApiInfo buildApiInfo() {
         return new ApiInfoBuilder()
-                .title("实训项目接口文档")
-                .description("这是一个实训项目，题目未知")
+                .title("携手创项目平台接口文档")
+                .description("携手创项目平台")
                 .termsOfServiceUrl("www.atXBai.com")
                 .contact(new Contact("小白","www.atXBai.com","2720513064@qq.com"))
                 .version("1.0")
