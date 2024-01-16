@@ -86,8 +86,16 @@ public class StudentController {
 
     @PostMapping("/edit")
     @ApiOperation(value = "修改个人经历部分")
-    public Response edit(@RequestBody Resume resume){
-        resumeService.updateResume(resume);
+    public Response edit(@RequestBody Resume resume,@RequestHeader("Authorization") String userToken){
+        String token = StringUtils.substring(userToken, 7);
+        String sno = jwtTokenHelper.getUsernameByToken(token);
+        Resume dbresume = resumeService.selectBySno(sno);
+        if (dbresume==null){
+            resume.setSno(sno);
+            studentService.add(resume);
+        }else {
+            resumeService.updateResume(resume);
+        }
         return Response.success();
     }
 
