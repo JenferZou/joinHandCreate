@@ -2,8 +2,11 @@ package com.atxbai.online.service.impl;
 
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
 import com.atxbai.online.common.textUtils.HtmlFilterHelper;
+import com.atxbai.online.mapper.DelieverResumeMapper;
+import com.atxbai.online.mapper.MessageMapper;
 import com.atxbai.online.mapper.ProjectMapper;
 import com.atxbai.online.mapper.TeacherMapper;
+import com.atxbai.online.model.pojo.Message;
 import com.atxbai.online.model.pojo.Student;
 import com.atxbai.online.model.pojo.Teacher;
 import com.atxbai.online.model.vo.ProjectPageReqVo;
@@ -22,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +43,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     JwtTokenHelper jwtTokenHelper;
     @Autowired
     private TeacherMapper teacherMapper;
+    @Autowired
+    private DelieverResumeMapper delieverResumeMapper;
+    @Autowired
+    private MessageMapper messageMapper;
 
     /**
      * 新增项目
@@ -97,13 +106,48 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteProject(Integer id) {
-        return projectMapper.deleteById(id) >= 1;
+        Project project=projectMapper.selectById(id);
+       int i=projectMapper.deleteById(id);
+       int j=0;
+       if(i>0){
+          j=this.delieverResumeMapper.setMark(id,-100);
+       }
+       Set<String> s=delieverResumeMapper.selectSno(id);
+       s.forEach(v->{
+           Message message = Message.builder()
+                   .sno(v).pid(id)
+                   .createDateTime(LocalDateTime.now())
+                   .content("项目名为"+project.getName()+"已被解散")
+                   .build();
+           // 插入数据
+          messageMapper.insert(message);
+       });
+        return j>0;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean multiDeleteProject(Integer[] ids) {
-        return projectMapper.deleteBatchIds(Arrays.asList(ids)) >= 1;
+        int j=0;
+        for (Integer id : ids) {
+            Project project=projectMapper.selectById(id);
+            j += projectMapper.deleteById(id);
+            j += this.delieverResumeMapper.setMark(id, -100);
+            Set<String> s=delieverResumeMapper.selectSno(id);
+            s.forEach(v->{
+                Message message = Message.builder()
+                        .sno(v).pid(id)
+                        .createDateTime(LocalDateTime.now())
+                        .content("项目名为"+project.getName()+"已被解散")
+                        .build();
+                // 插入数据
+                messageMapper.insert(message);
+            });
+        }
+
+        return j>0;
     }
 
     /**

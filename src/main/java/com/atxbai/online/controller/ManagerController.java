@@ -109,7 +109,6 @@ public class ManagerController {
     @PostMapping("/delete")
     @ApiOperation(value = "删除学生信息")
     public Response delete(@RequestBody Integer id) {
-        System.out.println(id);
         if (studentService.deleteStudent(id)) {
             Response<String> data = new Response();
             data.setErrorCode("200");
@@ -182,6 +181,7 @@ public class ManagerController {
     @PostMapping("/project/delete")
     @ApiOperation(value = "删除项目信息")
     public Object projectDelete(@RequestBody Integer id) {
+        System.out.println(id);
         if (projectService.deleteProject(id)) {
             Response<String> data = new Response<>();
             data.setErrorCode("200");
@@ -343,7 +343,6 @@ public class ManagerController {
     }
     @GetMapping(value = "/excel/exportBankCheckInfo")
     public void ExportBankCkeckInfo(HttpServletResponse response, HttpServletRequest request){
-        //这里是笔者实际业务需求中需要得到时间间隔。可忽略
         //得到所有要导出的数据
         List<Student> students =studentService.exportStudentExcel();
         //定义导出的excel名字
