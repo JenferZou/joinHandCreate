@@ -9,10 +9,15 @@ import com.atxbai.online.model.vo.ProjectReqVo;
 import com.atxbai.online.model.vo.SearchDataVO;
 import com.atxbai.online.model.vo.StudentVO;
 import com.atxbai.online.service.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 小白
@@ -36,7 +38,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+
 @Api(tags = "管理员模块")
 public class ManagerController {
     @Autowired
@@ -49,21 +51,58 @@ public class ManagerController {
     private TeacherService teacherService;
     @Autowired
     private ResumeService resumeService;
-
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Value("${qiniu.accessKey}")
+    private String accessKey;
+    @Value("${qiniu.secretKey}")
+    private String secretKey;
+    @Value("${qiniu.bucket.name}")
+    private String bucketName;
+    @Value("${qiniu.bucket.url}")
+    private String bucketUrl;
+    @GetMapping("upLoadToken")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    public Object getUpLoadToken() {
+        Response<Object> data = new Response();
+        Map<String, Object> res = new HashMap<>();
+        //上传文件名称
+        String fileName = UUID.randomUUID().toString();
+        data.setErrorCode("200");
+        //生成上传凭证
+        Auth auth = Auth.create(accessKey, secretKey);
+        StringMap putPolicy = new StringMap();
+        try {
+            Map<String, Integer> map = new HashMap<>();
+            map.put("code",0);
+            putPolicy.put("returnBody",this.objectMapper.writeValueAsString(map));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String upToken = auth.uploadToken(bucketName, fileName,3600,putPolicy);
+        res.put("upToken", upToken);
+        res.put("fileName", fileName);
+        res.put("url", bucketUrl +"/"+ fileName);
+        data.setData(res);
+        return data;
+    }
 
     @GetMapping("/dauList")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取日活信息")
     public Response dauList() {
         return managerService.dauList();
     }
 
     @GetMapping("/STFInfo")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取师生比信息")
     public Response stfList() {
         return managerService.stfList();
     }
 
     @GetMapping("/listStudent")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取学生列表")
     public Response listStudent(int page, int limit) {
         if (page < 0 || limit < 0) {
@@ -77,6 +116,7 @@ public class ManagerController {
     }
 
     @PostMapping("/modify")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改学生信息")
     public Response modify(@RequestBody @Validated StudentVO studentVO) {
         Student student = CopyTools.copy(studentVO, Student.class);
@@ -91,6 +131,7 @@ public class ManagerController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "添加学生信息")
     public Response add(@RequestBody @Validated StudentVO studentVO) {
         Student student = CopyTools.copy(studentVO, Student.class);
@@ -98,6 +139,7 @@ public class ManagerController {
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "删除学生信息")
     public Response delete(@RequestBody Integer id) {
         if (studentService.deleteStudent(id)) {
@@ -111,6 +153,7 @@ public class ManagerController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "搜索学生信息")
     public Response search(@Validated SearchDataVO searchDataVO) {
         if (searchDataVO.getPage() < 0 || searchDataVO.getLimit() < 0) {
@@ -124,6 +167,7 @@ public class ManagerController {
     }
 
     @PostMapping("/student/changePassword")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改密码")
     public Object changePassword(@RequestBody Integer id) {
         if (studentService.resetPassword(id)) {
@@ -137,6 +181,7 @@ public class ManagerController {
     }
 
     @PostMapping("/modify/password")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改密码")
     public Response modifyPassword(@RequestBody Map<String, String> data) {
 
@@ -144,6 +189,7 @@ public class ManagerController {
     }
 
     @GetMapping("/project/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取项目列表")
     public Response projectList(int page, int limit, String keyword) {
         if (page < 0 || limit < 0) {
@@ -157,6 +203,7 @@ public class ManagerController {
     }
 
     @PostMapping("/project/modify")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改项目信息")
     public Object projectModify(@RequestBody Project project) {
         if (projectService.updateProject(project)) {
@@ -170,6 +217,7 @@ public class ManagerController {
     }
 
     @PostMapping("/project/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "删除项目信息")
     public Object projectDelete(@RequestBody Integer id) {
         System.out.println(id);
@@ -184,6 +232,7 @@ public class ManagerController {
     }
 
     @PostMapping("/project/multidelete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "批量删除项目信息")
     public Object projectDelete(@RequestBody Integer[] ids) {
         if (projectService.multiDeleteProject(ids)) {
@@ -197,6 +246,7 @@ public class ManagerController {
     }
 
     @GetMapping("/project/get/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取项目信息")
     public Object projectGet(@PathVariable Integer id) {
         Project project = projectService.getById(id);
@@ -210,6 +260,7 @@ public class ManagerController {
     }
 
     @GetMapping("/manager/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取管理员信息")
     public Object managerGet(int page, int limit, String keyword, @RequestHeader("Authorization") String header) {
         if (page < 0 || limit < 0) {
@@ -223,6 +274,7 @@ public class ManagerController {
     }
 
     @PostMapping("/manager/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "删除管理员信息")
     public Object managerDelete(@RequestBody Integer id) {
         if (managerService.deleteManager(id)) {
@@ -236,6 +288,7 @@ public class ManagerController {
     }
 
     @PostMapping("/manager/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改管理员信息")
     public Object managerUpdate(@RequestBody Manager manager) {
         if (managerService.updateManager(manager)) {
@@ -249,6 +302,7 @@ public class ManagerController {
     }
 
     @GetMapping("/teacher/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "获取教师信息")
     public Object teacherGet(int page, int limit, String keyword) {
         if (page < 0 || limit < 0) {
@@ -263,6 +317,7 @@ public class ManagerController {
 
     @GetMapping("/teacher/preedit/{no}")
     @ApiOperation(value = "获取单个教师信息")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Object teacherPreedit(@PathVariable(value = "no") Integer no) {
         Response<Teacher> data = new Response<>();
         Teacher t = teacherService.getTeacherByNo(no);
@@ -272,6 +327,7 @@ public class ManagerController {
     }
 
     @PostMapping("/teacher/modify")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "修改教师信息")
     public Object teacherModify(@RequestBody Teacher teacher) {
         if (teacherService.updateTeacher(teacher)) {
@@ -285,6 +341,7 @@ public class ManagerController {
     }
 
     @PostMapping("/teacher/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "删除教师信息")
     public Object teacherDelete(@RequestBody Integer id) {
         if (teacherService.deleteTeacher(id)) {
@@ -298,6 +355,7 @@ public class ManagerController {
     }
 
     @PostMapping("/teacher/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "添加教师信息")
     public Object teacherAdd(@RequestBody Teacher teacher) {
         if (teacherService.addTeacher(teacher)) {
@@ -311,6 +369,7 @@ public class ManagerController {
     }
 
     @PostMapping("/teacher/resetPassword")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "重置教师密码")
     public Object teacherResetPassword(@RequestBody Integer no) {
         if (teacherService.resetPassword(no)) {
@@ -324,6 +383,7 @@ public class ManagerController {
     }
 
     @GetMapping("/preview/resume/{sno}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "预览简历及学生信息")
     public Object previewResume(@PathVariable("sno") String sno) {
         Response<Map<String, Object>> data = new Response<>();
@@ -334,6 +394,7 @@ public class ManagerController {
     }
 
     @PostMapping("/resume/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "更新简历")
     public Object resumeUpdate(@RequestBody Resume resume) {
         if (resume.getResumeId() != null && resumeService.updateById(resume)) {
@@ -347,6 +408,8 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/excel/exportBankCheckInfo")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "导出学生信息")
     public void ExportBankCkeckInfo(HttpServletResponse response, HttpServletRequest request) {
         //得到所有要导出的数据
         List<Student> students = studentService.exportStudentExcel();
@@ -369,6 +432,8 @@ public class ManagerController {
     }
 
     @PostMapping("/excel/leadExcel")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "导出学生信息")
     public Object leadExcel(@RequestBody MultipartFile file) {
         int i = 0;
         if (file == null) {
@@ -400,6 +465,7 @@ public class ManagerController {
     }
 
     @ApiOperation("上传Excel导入教师")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/excel/upload")
     public Response upload(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
         teacherService.upload(file.getInputStream());
@@ -407,6 +473,7 @@ public class ManagerController {
     }
 
     @ApiOperation("下载 Excel 导出教师")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/excel/download")
     public Response download() {
         teacherService.export();
