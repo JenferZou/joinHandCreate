@@ -53,21 +53,16 @@ public class ProjectController {
     /**
      * 根据项目id获取项目详情
      * @param id
-     * @param pageNo
-     * @param pageSize
      * @return
      */
     @ApiOperation(value = "根据项目id获取项目详情")
     @GetMapping("/getProjectById")
-    public PageResponse<Project> getProjectById(@RequestParam("id") Integer id, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
+    public Response<Project> getProjectById(@RequestParam("id") Integer id){
         if(id == null){
             throw new BizException(ResponseCodeEnum.CODE_600);
         }
-        Page<Project> projectPage = new Page<>(pageNo == null? 1 : pageNo, pageSize == null? 10 : pageSize);
-        LambdaQueryWrapper<Project> projectLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        projectLambdaQueryWrapper.eq(Project::getId, id);
-        IPage<Project> page = projectService.page(projectPage, projectLambdaQueryWrapper);
-        return PageResponse.success(page,page.getRecords());
+        Project project = projectService.getById(id);
+        return Response.success(project);
     }
 
 

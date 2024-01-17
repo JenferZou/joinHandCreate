@@ -8,6 +8,7 @@
     <select id="selectMessageListBySno" resultType="com.atxbai.online.model.vo.MessageVo">
         SELECT
             m.mid,
+            m.tno,
             s.sName ,
             s.sno ,
             m.createTime ,

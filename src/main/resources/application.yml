@@ -4,9 +4,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/exam?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/exam?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
     username: root
-    password: xwf17825377805
+    password: zjf13760351788
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
@@ -28,10 +28,10 @@ jwt:
   tokenHeaderKey: Authorization
   # token 请求头中的 value 值的前缀
   tokenPrefix: Bearer
+
 qiniu: #七牛云配置
   accessKey: Ia_0QtcMsRf8rNkjW218NSM7CP0sFIL_emhyLzgM
   secretKey: jpR-BKQ7SiYBPgmCi_sKF_Zafsgn1ysLMmklxjla
   bucket:
     name: in-hand
     url: http://s7cqf42ux.hn-bkt.clouddn.com
-
