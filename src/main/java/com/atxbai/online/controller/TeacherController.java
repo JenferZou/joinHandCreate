@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author 小白
@@ -90,9 +91,9 @@ public class TeacherController {
         return teacherService.updatePassword(header,editPasswordVo);
     }
 
-    @GetMapping("/deleteProject")
+    @PostMapping("/deleteProject")
     @ApiOperation("教师删除项目")
-    public Response projectDelete( Integer id) {
+    public Response projectDelete(int id) {
         if (projectService.deleteProject(id)) {
             return Response.success();
         } else {
