@@ -149,7 +149,7 @@ public class TeacherServiceImpl implements TeacherService {
                     .sName(rd.getSName())
                     .projectName(rd.getProjectName())
                     .smajor(rd.getSMajor())
-                    .content(rd.getContent())
+                    .content(HtmlFilterHelper.getContent(rd.getContent()))
                     .build()
             ).collect(Collectors.toList());
         }

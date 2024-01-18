@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -50,6 +51,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveMessageBySno(KickOutStudentReqVo kickOutStudentReqVo) {
         Message addMessage = new Message();
         BeanUtils.copyProperties(kickOutStudentReqVo,addMessage);

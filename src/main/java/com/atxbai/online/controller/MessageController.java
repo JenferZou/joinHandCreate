@@ -56,7 +56,7 @@ public class MessageController {
     }
 
     @PostMapping("/saveMessageBySno")
-    private Response saveMessageBySno(@RequestBody KickOutStudentReqVo kickOutStudentReqVo){
+    public Response saveMessageBySno(@RequestBody KickOutStudentReqVo kickOutStudentReqVo){
         messageService.saveMessageBySno(kickOutStudentReqVo);
         return Response.success();
     }
