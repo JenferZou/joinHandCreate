@@ -4,6 +4,7 @@ import com.atxbai.online.common.constants.Constant;
 import com.atxbai.online.common.responseUtils.PageResponse;
 import com.atxbai.online.common.responseUtils.Response;
 import com.atxbai.online.common.securityUtils.JwtTokenHelper;
+import com.atxbai.online.common.textUtils.HtmlFilterHelper;
 import com.atxbai.online.model.pojo.DelieverResume;
 import com.atxbai.online.model.pojo.Project;
 import com.atxbai.online.model.pojo.Resume;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -126,7 +128,13 @@ public class DelieverResumeController {
         LambdaQueryWrapper<DelieverResume> resumeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         resumeLambdaQueryWrapper.eq(DelieverResume::getSno,sno).like(DelieverResume::getProjectName,name);
         IPage<DelieverResume> page = delieverResumeService.page(delieverResumePage, resumeLambdaQueryWrapper);
-        return PageResponse.success(page, page.getRecords());
+        List<DelieverResume> records = page.getRecords();
+        records = records.stream().map(delieverResume -> {
+            String content = delieverResume.getContent();
+            delieverResume.setContent(HtmlFilterHelper.getContent(content));
+            return  delieverResume;
+        }).collect(Collectors.toList());
+        return PageResponse.success(page, records);
 
     }
 
